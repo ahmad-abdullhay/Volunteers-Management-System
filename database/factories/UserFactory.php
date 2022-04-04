@@ -18,11 +18,18 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
+            'name'                  => $this->faker->name(),
+            'username'              => $this->faker->userName(),
+            'email'                 => $this->faker->unique()->safeEmail(),
+            'volunteering_history'  => $this->faker->paragraph,
+            'date_of_birth'         => $this->faker->date,
+            'job'                   => $this->faker->jobTitle,
+            'phone'                 => $this->faker->phoneNumber,
+            'location'              => $this->faker->country,
+            'gender'                => $this->faker->numberBetween(0,1),
+            'email_verified_at'     => now(),
+            'password'              => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'remember_token'        => Str::random(10),
         ];
     }
 }
