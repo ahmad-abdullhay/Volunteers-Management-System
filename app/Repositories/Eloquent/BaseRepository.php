@@ -134,6 +134,10 @@ class BaseRepository implements RepositoryInterface
         //Extract All Files Data From Payload (ex: images, videos, attachments).
         $files = $this->extractFilesData($payload);
 
+        if (!$this->model->translatedAttributes){
+            unset($payload['en']);
+            unset($payload['ar']);
+        }
         $model = $this->model->create($payload);
 
         //Sync every(many to many) relation with its data from payload.

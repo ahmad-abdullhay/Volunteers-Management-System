@@ -14,7 +14,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
      */
     public function __construct(User $model)
     {
-        $this->columns = ['name', 'email'];
         parent::__construct($model);
     }
 }
