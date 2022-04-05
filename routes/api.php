@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\AuthController;
 use App\Http\Controllers\Dashboard\JoinRequestController;
+use App\Http\Controllers\Dashboard\EventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,7 @@ Route::prefix('dashboard')->group(function () {
         //End Roles && Permissions.
 
         Route::resource('join-requests', JoinRequestController::class);
+        Route::resource('events', EventController::class);
     });
 
 });

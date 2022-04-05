@@ -161,11 +161,33 @@ class BaseRepository implements RepositoryInterface
      */
     public function update(int $modelId, array $payload): bool
     {
-        $payload = TranslationService::getAllTranslationKey($this->model->translatedAttributes ?? [], $payload);
-
         $model = $this->findById($modelId);
 
-        return $model->update($payload);
+        $payload = TranslationService::getAllTranslationKey($this->model->translatedAttributes ?? [], $payload);
+
+        //Get Many To Many relations Data from Payload.
+        $manyToManyRelationsData = $this->getModelRelations($payload);
+
+        //Extract All Files Data From Payload (ex: images, videos, attachments).
+        $files = $this->extractFilesData($payload);
+
+        if (!$this->model->translatedAttributes){
+            unset($payload['en']);
+            unset($payload['ar']);
+        }
+
+        $model = $model->update($payload);
+
+        //Sync every(many to many) relation with its data from payload.
+        foreach ($manyToManyRelationsData as $key => $value)
+            $model->{$key}()->sync($value);
+
+
+        //Assign Files Data To Current Model.
+        if ($files)
+            $this->assignFilesToModel($model, $files);
+
+        return $model;
     }
 
     /**
