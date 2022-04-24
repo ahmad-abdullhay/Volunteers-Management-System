@@ -30,7 +30,7 @@ Route::prefix('dashboard')->group(function () {
     //Admin Login Route.
     Route::post('/login', [AuthController::class, 'login']);
 
-//    Route::group(['middleware' => 'auth:sanctum'], function(){
+    Route::group(['middleware' => 'auth:sanctum'], function(){
 
         // Start Roles && Permissions.
 
@@ -41,7 +41,7 @@ Route::prefix('dashboard')->group(function () {
 
         Route::resource('join-requests', JoinRequestController::class);
         Route::resource('events', EventController::class);
-//    });
+    });
 
 });
 
