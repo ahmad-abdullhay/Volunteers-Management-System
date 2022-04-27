@@ -5,6 +5,7 @@ namespace App\Services\Shared;
 
 
 use App\Common\SharedMessage;
+use App\Repositories\Eloquent\BaseRepository;
 
 class BaseService
 {

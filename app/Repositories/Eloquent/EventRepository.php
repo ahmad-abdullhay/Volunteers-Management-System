@@ -3,6 +3,7 @@
 namespace App\Repositories\Eloquent;
 
 use App\Models\Event;
+use App\Models\EventUser;
 use App\Repositories\EventRepositoryInterface;
 
 class EventRepository extends BaseRepository implements EventRepositoryInterface
@@ -17,4 +18,20 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
         parent::__construct($model);
     }
 
+    public function attachUsersToEvent($event, $users, $type, $status)
+    {
+
+        $usersData = [];
+
+        foreach ($users as $key => $user){
+            $usersData[$user] = [
+                'status' => $status,
+                'is_supervisor' => $type
+            ];
+        }
+
+        $event->users()->attach($usersData);
+
+        $event->save();
+    }
 }
