@@ -15,7 +15,7 @@ class AuthService
             $admin = auth('admin')->user();
             $data['admin'] = $admin;
 
-            $data['admin']['access_token'] =  $admin->createToken('auth_token')->plainTextToken;
+            $data['admin']['access_token'] =  $admin->createToken('dashboard', ['role:admin'])->plainTextToken;
             $data['admin']['roles'] = $admin->roles;
             return new SharedMessage(__('success.login', ['admin' => $admin->name]), $data, true, null, 200);
         } catch (\Exception $exception) {

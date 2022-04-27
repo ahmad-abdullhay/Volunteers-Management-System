@@ -8,10 +8,13 @@ use App\Services\Shared\BaseService;
 
 class JoinRequestService extends BaseService
 {
+    protected $repository;
     protected string $modelName = "JoinRequest";
+
     protected UserService $userService;
     public function __construct(JoinRequestRepository $repository, UserService $userService)
     {
+        $this->repository = $repository;
         parent::__construct($repository);
         $this->userService = $userService;
     }
@@ -49,6 +52,16 @@ class JoinRequestService extends BaseService
 
         return new SharedMessage(__('success.delete', ['model' => $this->modelName]),
             true,
+            true,
+            null,
+            200
+        );
+    }
+
+    public function changeRequestStatus($modelId, $status)
+    {
+        return new SharedMessage(__('success.delete', ['model' => $this->modelName]),
+            $this->repository->changeRequestStatus($modelId, $status),
             true,
             null,
             200

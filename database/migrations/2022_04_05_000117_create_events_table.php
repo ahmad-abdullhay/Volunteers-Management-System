@@ -20,8 +20,8 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->integer('required_volunteers_number');
-            $table->tinyInteger("is_finished")
-                ->comment("(0) => Not End yet, (1) => Has Done")
+            $table->tinyInteger("status")
+                ->comment("(0) => Not Started Yet, (1) => In Progress, (2) => Finished")
                 ->default(0);
             $table->timestamps();
         });

@@ -17,4 +17,11 @@ class JoinRequestRepository extends BaseRepository implements JoinRequestReposit
         parent::__construct($model);
     }
 
+    public function changeRequestStatus($modelId, $status)
+    {
+        $joinRequest = $this->findById($modelId);
+        $joinRequest->status = $status;
+        $joinRequest->save();
+    }
+
 }

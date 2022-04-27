@@ -16,6 +16,7 @@ class EventController extends CrudController
      */
     public function __construct(EventService $service, EventRequest $request)
     {
+
         // Call on parent constructor.
         parent::__construct($service, $request);
     }

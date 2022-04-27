@@ -6,6 +6,7 @@ use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\AuthController;
 use App\Http\Controllers\Dashboard\JoinRequestController;
 use App\Http\Controllers\Dashboard\EventController;
+use App\Http\Controllers\Dashboard\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,11 +19,14 @@ use App\Http\Controllers\Dashboard\EventController;
 |
 */
 
-Route::middleware('auth:sanctum')->post('dashboard/user', function (Request $request) {
+//Route::middleware('auth:sanctum')->post('dashboard/user', function (Request $request) {
+//
+//});
 
+
+Route::group(['prefix' => 'mobile'], function () {
+    require_once base_path('routes/mobile.php');
 });
-
-
 
 
 Route::prefix('dashboard')->group(function () {
@@ -30,7 +34,7 @@ Route::prefix('dashboard')->group(function () {
     //Admin Login Route.
     Route::post('/login', [AuthController::class, 'login']);
 
-    Route::group(['middleware' => 'auth:sanctum'], function(){
+    Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function(){
 
         // Start Roles && Permissions.
 
@@ -41,6 +45,10 @@ Route::prefix('dashboard')->group(function () {
 
         Route::resource('join-requests', JoinRequestController::class);
         Route::resource('events', EventController::class);
+
+        Route::patch('join-request/:join-request', [JoinRequestController::class, 'changeRequestStatus']);
+        Route::patch('activate-volunteer/{user}', [UserController::class, 'activateVolunteer']);
+
     });
 
 });

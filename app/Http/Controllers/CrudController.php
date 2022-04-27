@@ -50,10 +50,10 @@ class CrudController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param MainRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(MainRequest $request)
     {
         return $this->handleSharedMessage($this->service->store($request->all()));
     }

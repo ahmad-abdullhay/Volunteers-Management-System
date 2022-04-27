@@ -26,6 +26,9 @@ class User extends BaseModel implements
         CanResetPassword,
         MustVerifyEmail;
 
+    const ACTIVE_STATUS = 1;
+    const INACTIVE_STATUS = 0;
+
     protected $guarded = [];
 
     /**
@@ -46,4 +49,14 @@ class User extends BaseModel implements
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function joinRequest()
+    {
+        return $this->hasOne(JoinRequest::class, 'user_id');
+    }
+
+    public function events()
+    {
+        return $this->belongsToMany(Event::class);
+    }
 }
