@@ -10,7 +10,7 @@ use App\Services\Shared\BaseService;
 class EventService extends BaseService
 {
     protected string $modelName = "Event";
-    protected EventRepository $repository;
+    protected $repository;
     public function __construct(EventRepository $repository)
     {
         $this->repository = $repository;
