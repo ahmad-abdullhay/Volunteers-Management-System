@@ -27,16 +27,8 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
     public function changeVolunteersJoinEventStatus(array $payload)
     {
-        $data = [];
-        foreach($payload['users'] as $user){
-            $data[] = [
-                'user_id' => $user,
-                'event_id' => $payload['event_id'],
-                'status' => $payload['status']
-            ];
-        }
-
-        return EventUser::insert($data);
+        EventUser::whereIn('user_id', $payload['users'])
+            ->where('event_id', $payload['event_id'])->update(['status' => $payload['status']]);
     }
 
     public function joinEvent($payload)

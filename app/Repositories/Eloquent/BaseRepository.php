@@ -2,28 +2,28 @@
 
 namespace App\Repositories\Eloquent;
 
-use App\Models\BaseModel;
-use App\Models\TempMedia;
 use App\Services\Facade\TranslationServiceFacade as TranslationService;
 use App\Services\Facade\SearchServiceFacade as SearchService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use App\Repositories\RepositoryInterface;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use function Spatie\MediaLibrary\MediaCollections\useDisk;
+use Illuminate\Support\Str;
 
 class BaseRepository implements RepositoryInterface
 {
     /**
-     * @var BaseModel
+     * @var Model
      */
-    protected BaseModel $model;
+    protected Model $model;
 
     /**
      * BaseRepository constructor.
      *
-     * @param BaseModel $model
+     * @param Model $model
      */
-    public function __construct(BaseModel $model)
+    public function __construct(Model $model)
     {
         $this->model = $model;
     }
@@ -34,19 +34,26 @@ class BaseRepository implements RepositoryInterface
      * @param int $length
      * @param array $sortKeys
      * @param array $sortDir
+     * @param array $filters
      * @param string|null $search
      * @return Collection
      */
     public function all(
         array $columns = ['*'],
         array $relations = [],
-        $length = 10,
+        int $length = 10,
         array $sortKeys = ['id'],
         array $sortDir = ['DESC'],
-        string $search = null
+        array $filters = [],
+        string $search = null,
+        int $searchInRelation = 0
     )
     {
-        $data = $this->model
+        $query = $this->model->query();
+
+        $this->model->applyFilters($query, $filters);
+
+        $data = $query
             ->select($columns)
             ->with($relations);
 
@@ -55,10 +62,18 @@ class BaseRepository implements RepositoryInterface
         if ($search != null) {
 
             if ($isSortable){
-                $this->searchByLike($data, $search);
-            }else{
-                $this->searchByFullText($data, $search);
+                if($searchInRelation){
+                    $this->searchByLike($data, $search, $relations);
+                }else{
+                    $this->searchByLike($data, $search);
+                }
 
+            }else{
+                if($searchInRelation){
+                    $this->searchByFullText($data, $search, $relations);
+                }else{
+                    $this->searchByLike($data, $search);
+                }
                 //Checking if there's no sort keys sent with the request.
                 //  => Emptying sort keys array in order to sort via Full text search |Score|
                 $sortKeys = [];
@@ -138,6 +153,10 @@ class BaseRepository implements RepositoryInterface
             unset($payload['en']);
             unset($payload['ar']);
         }
+        $relatedToCurrentUser = $this->model->relatedToCurrentUser;
+        if ($this->model->relatedToCurrentUser)
+            $payload[$relatedToCurrentUser] = auth()->id();
+
         $model = $this->model->create($payload);
 
         //Sync every(many to many) relation with its data from payload.
@@ -157,9 +176,8 @@ class BaseRepository implements RepositoryInterface
      *
      * @param int $modelId
      * @param array $payload
-     * @return Model
      */
-    public function update(int $modelId, array $payload): bool
+    public function update(int $modelId, array $payload)
     {
         $model = $this->findById($modelId);
 
@@ -173,10 +191,10 @@ class BaseRepository implements RepositoryInterface
 
         if (!$this->model->translatedAttributes){
             unset($payload['en']);
-            unset($payload['ar']);
+            unset($payload['es']);
         }
 
-        $model = $model->update($payload);
+        $model->update($payload);
 
         //Sync every(many to many) relation with its data from payload.
         foreach ($manyToManyRelationsData as $key => $value)
@@ -187,7 +205,7 @@ class BaseRepository implements RepositoryInterface
         if ($files)
             $this->assignFilesToModel($model, $files);
 
-        return $model;
+        return $model->fresh();
     }
 
     /**
@@ -325,15 +343,20 @@ class BaseRepository implements RepositoryInterface
 
     private function assignFilesToModel(Model $model, $files)
     {
+        foreach ($model->media as $media) {
+            $media->update([
+                'model_type' => 'App\Models\TempMedia',
+            ]);
+        }
         if ($files)
-            Media::whereIn('id', $files)->where('model_type', get_class(TempMedia::class))->update([
+            Media::whereIn('id', $files)->update([
                 'model_id' => $model->id,
                 'model_type' => get_class($model),
                 'collection_name' => 'default'
             ]);
     }
 
-    private function searchByLike(& $data, $search)
+    private function searchByLike(& $data, $search, $searchInRelations = [])
     {
         //Get Model Translated Attributes.
         $translatedAttributes = $this->model->translatedAttributes;
@@ -341,28 +364,75 @@ class BaseRepository implements RepositoryInterface
         //Get Model Searchable Attributes.
         $searchableAttributes = $this->model->getSearchableAttributes();
 
+        $data->where(function ($query) use ($search, $searchableAttributes, $translatedAttributes) {
+            $query->whereHas('translations', function ($query) use ($search, $translatedAttributes) {
+                foreach ($translatedAttributes as $key => $attribute)
+                    if ($key === 0)
+                        $query->where($attribute, 'LIKE', "%{$search}%");
+                    else
+                        $query->orWhere($attribute, 'LIKE', "%{$search}%");
+            });
 
-        $data->whereHas('translations', function ($query) use ($search, $translatedAttributes) {
-            foreach ($translatedAttributes as $key => $attribute)
-                if ($key === 0)
-                    $query
-                        ->where($attribute, 'LIKE', "%{$search}%");
-                else
-                    $query
-                        ->orWhere($attribute, 'LIKE', "%{$search}%");
+            foreach ($searchableAttributes as $key => $attribute){
+                if ($key === 0){
+                    if(isset($translatedAttributes[0])){
+                        $query->orWhere($attribute, 'LIKE', "%{$search}%");
+                    }else{
+                        $query->where($attribute, 'LIKE', "%{$search}%");
+                    }
+                }
+                else{
+                    $query->orWhere($attribute, 'LIKE', "%{$search}%");
+                }
+            }
         });
 
-        foreach ($searchableAttributes as $key => $attribute){
-            if ($key === 0)
-                $data
-                    ->where($attribute, 'LIKE', "%{$search}%");
-            else
-                $data
-                    ->orWhere($attribute, 'LIKE', "%{$search}%");
+
+        if($searchInRelations){
+            foreach($searchInRelations as $relation){
+                $relation = ucfirst(Str::singular($relation));
+                $relationModel = resolve("App\Models\\" . $relation);
+
+                $relationModelSearchable = $relationModel->getSearchableAttributes();
+                $relationModelTranslations = $relationModel->translatedAttributes;
+
+
+                //search in model translated attributes
+                if($relationModelTranslations){
+
+                    $data->orWhereHas($relationModel->getTable(), function ($query) use ($search, $relationModelTranslations) {
+                        $query->whereHas('translations', function ($query) use ($search, $relationModelTranslations) {
+                            foreach ($relationModelTranslations as $key => $attribute)
+                                if ($key === 0)
+                                    $query
+                                        ->where($attribute, 'LIKE', "%{$search}%");
+                                else
+                                    $query
+                                        ->orWhere($attribute, 'LIKE', "%{$search}%");
+                        });
+                    });
+                }
+
+                //search in model attributes
+                if($relationModelSearchable){
+                    //Convert Model Attributes Array To a string delimited by (,) ex: (arr : [x, y, z]) => 'x,y,z'
+
+                    $data->orWhereHas($relationModel->getTable(), function ($query) use ($search, $relationModelSearchable) {
+                        foreach ($relationModelSearchable as $key => $attribute){
+                            if ($key === 0)
+                                $query
+                                    ->where($attribute, 'LIKE', "%{$search}%");
+                            else
+                                $query
+                                    ->orWhere($attribute, 'LIKE', "%{$search}%");
+                        }
+                    });
+                }
+            }
         }
     }
 
-    private function searchByFullText(& $data, $search)
+    private function searchByFullText(& $data, $search, $searchInRelations = [])
     {
         //Get Translated Attributes.
         $translatedAttributes = $this->model->translatedAttributes;
@@ -376,16 +446,53 @@ class BaseRepository implements RepositoryInterface
         //Separate search string into tokens.
         $tokens = SearchService::convertToSeparatedTokens($search);
 
-        $data->whereHas('translations', function ($query) use ($tokens, $translatedAttributes) {
-            $query
-                ->WhereRaw("MATCH({$translatedAttributes}) AGAINST(? IN BOOLEAN MODE) > 0", $tokens);
-        });
+        //search in model translated attributes
+        if($translatedAttributes){
+            $data->whereHas('translations', function ($query) use ($tokens, $translatedAttributes) {
+                $query
+                    ->WhereRaw("MATCH({$translatedAttributes}) AGAINST(? IN BOOLEAN MODE) > 0", $tokens);
+            });
+        }
 
+        //search in model attributes
         if($searchableAttributes){
             //Convert Model Attributes Array To a string delimited by (,) ex: (arr : [x, y, z]) => 'x,y,z'
             $searchableAttributes = convertArrayToDelimitedString($searchableAttributes, ',');
 
             $data->orWhereRaw("MATCH({$searchableAttributes}) AGAINST(? IN BOOLEAN MODE) > 0", $tokens);
+        }
+
+        //search in model relations
+        if($searchInRelations){
+            foreach($searchInRelations as $relation){
+                $relation = ucfirst(Str::singular($relation));
+                $relationModel = resolve("App\Models\\" . $relation);
+
+                $relationModelSearchable = $relationModel->getSearchableAttributes();
+                $relationModelTranslations = $relationModel->translatedAttributes;
+
+
+                //search in model translated attributes
+                if($relationModelTranslations){
+
+                    $relationModelTranslations = convertArrayToDelimitedString($relationModelTranslations, ',');
+                    $data->orWhereHas($relationModel->getTable(), function ($query) use ($tokens, $relationModelTranslations) {
+                        $query->whereHas('translations', function ($query) use ($tokens, $relationModelTranslations) {
+                            $query->WhereRaw("MATCH({$relationModelTranslations}) AGAINST(? IN BOOLEAN MODE) > 0", $tokens);
+                        });
+                    });
+                }
+
+                //search in model attributes
+                if($relationModelSearchable){
+                    //Convert Model Attributes Array To a string delimited by (,) ex: (arr : [x, y, z]) => 'x,y,z'
+                    $relationModelSearchable = convertArrayToDelimitedString($relationModelSearchable, ',');
+
+                    $data->orWhereHas($relationModel->getTable(), function ($query) use ($tokens, $relationModelSearchable) {
+                        $query->WhereRaw("MATCH({$relationModelSearchable}) AGAINST(? IN BOOLEAN MODE) > 0", $tokens);
+                    });
+                }
+            }
         }
     }
 }

@@ -41,7 +41,9 @@ class EventRequest extends MainRequest
                     'users.*'                       => [
                         Rule::exists('users', 'id')
                             ->where('is_active', User::ACTIVE_STATUS),
-                    ]
+                    ],
+                    'metrics'                       => 'array',
+                    'metrics.*'                     => 'exists:metrics,id'
                 ];
             default:break;
         }

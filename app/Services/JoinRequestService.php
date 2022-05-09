@@ -31,9 +31,9 @@ class JoinRequestService extends BaseService
         return parent::store($joinRequestPayload);
     }
 
-    public function index(array $columns = ['*'], array $relations = [], $length = 10, array $sortKeys = ['id'], array $sortDir = ['desc'], string $search = null)
+    public function index(array $columns = ['*'], array $relations = [], $length = 10, array $sortKeys = ['id'], array $sortDir = ['desc'],array $filters = [], string $search = null)
     {
-        return parent::index($columns, ['admin', 'user'], $length, $sortKeys, $sortDir, $search);
+        return parent::index($columns, ['admin', 'user'], $length, $sortKeys, $sortDir, $filters, $search);
     }
 
     public function view(int $id, array $columns = ['*'], array $relations = [], array $appends = [])
