@@ -12,12 +12,19 @@ interface RepositoryInterface
      *
      * @param array $columns
      * @param array $relations
+     * @param int $length
      * @param array $params
      * @param array $sortKeys
      * @param array $sortDir
      * @return Collection
      */
-    public function all(array $columns = ['*'], array $relations = [], $length = 10, array $sortKeys = ['id'], array $sortDir = ['DESC']);
+    public function all(
+        array $columns = ['*'],
+        array $relations = [],
+        int $length = 10,
+        array $sortKeys = ['id'],
+        array $sortDir = ['DESC']
+    );
 
     /**
      * Get all trashed models.
@@ -71,9 +78,8 @@ interface RepositoryInterface
      *
      * @param int $modelId
      * @param array $payload
-     * @return bool
      */
-    public function update(int $modelId, array $payload): bool;
+    public function update(int $modelId, array $payload);
 
     /**
      * Delete model by id.

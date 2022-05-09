@@ -25,6 +25,7 @@ class EventService extends BaseService
 
             unset($payload['users']);
 
+
             $event =  $this->repository->create($payload);
 
             $this->repository->attachUsersToEvent(

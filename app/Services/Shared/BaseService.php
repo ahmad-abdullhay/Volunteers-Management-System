@@ -94,6 +94,7 @@ class BaseService
      * @param int $length
      * @param array $sortKeys
      * @param array $sortDir
+     * @param array $filters
      * @param string|null $search
      * @return SharedMessage
      */
@@ -103,11 +104,12 @@ class BaseService
         $length = 10,
         array $sortKeys = ['id'],
         array $sortDir = ['desc'],
+        array $filters = [],
         string $search = null
     )
     {
         return new SharedMessage(__('success.all', ['model' => $this->modelName]),
-            $this->repository->all($columns, $relations, $length, $sortKeys, $sortDir, $search),
+            $this->repository->all($columns, $relations, $length, $sortKeys, $sortDir, $filters, $search),
             true,
             null,
             200

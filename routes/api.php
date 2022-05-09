@@ -7,6 +7,7 @@ use App\Http\Controllers\Dashboard\AuthController;
 use App\Http\Controllers\Dashboard\JoinRequestController;
 use App\Http\Controllers\Dashboard\EventController;
 use App\Http\Controllers\Dashboard\UserController;
+use App\Http\Controllers\Dashboard\MetricController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,12 @@ Route::prefix('dashboard')->group(function () {
 
         Route::resource('join-requests', JoinRequestController::class);
         Route::resource('events', EventController::class);
+
+        //StartMetric Routes.
+
+        Route::apiResource('metrics', MetricController::class);
+
+        //End Metric Routes.
 
         Route::patch('join-request/:join-request', [JoinRequestController::class, 'changeRequestStatus']);
         Route::patch('activate-volunteer/{user}', [UserController::class, 'activateVolunteer']);
