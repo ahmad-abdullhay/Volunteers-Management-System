@@ -8,6 +8,9 @@ use App\Http\Controllers\Dashboard\JoinRequestController;
 use App\Http\Controllers\Dashboard\EventController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\MetricController;
+use App\Http\Controllers\Dashboard\PostController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +30,7 @@ use App\Http\Controllers\Dashboard\MetricController;
 
 Route::group(['prefix' => 'mobile'], function () {
     require_once base_path('routes/mobile.php');
+
 });
 
 
@@ -34,6 +38,8 @@ Route::prefix('dashboard')->group(function () {
 
     //Admin Login Route.
     Route::post('/login', [AuthController::class, 'login']);
+    Route::resource('posts',PostController ::class);
+
 
     Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function(){
 
@@ -46,6 +52,8 @@ Route::prefix('dashboard')->group(function () {
 
         Route::resource('join-requests', JoinRequestController::class);
         Route::resource('events', EventController::class);
+
+
 
         //StartMetric Routes.
 
