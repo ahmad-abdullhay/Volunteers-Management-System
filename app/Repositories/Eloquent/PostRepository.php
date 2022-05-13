@@ -19,8 +19,13 @@ class PostRepository extends BaseRepository
     }
 
     public function readAll(){
-        return Post::orderByDesc("created_at")->with("admin")->get();
+        return Post::orderByDesc("created_at")->where("status",1)->with("admin")->get();
     }
+
+    public function readOne($id){
+        return Post::query()->where('id',$id)->where("status",1)->with("admin")->get();
+    }
+
 
 
 }

@@ -52,6 +52,7 @@ Route::prefix('dashboard')->group(function () {
         Route::resource('roles', RoleController::class);
 
         //End Roles && Permissions.
+        Route::get('posts/accept/{id}',[PostController ::class,'acceptPost']);
 
         Route::resource('posts',PostController ::class);
 

@@ -26,4 +26,8 @@ class PostController extends CrudController
     public function readOne($id){
         return $this->handleSharedMessage($this->service->readOne($id));
     }
+
+    public function acceptPost($id){
+        return $this->handleSharedMessage($this->service->acceptPost($id));
+    }
 }

@@ -16,9 +16,9 @@ class PostRequest extends MainRequest
         switch($this->method()) {
             case 'GET':
             case 'PATCH':
+            case 'PUT':
             case 'DELETE':
                 return [];
-            case 'PUT':
             case 'POST':
                 return [
                     'title'                          => 'required|string',
