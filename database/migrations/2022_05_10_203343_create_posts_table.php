@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->string('text');
-//            $table->foreignId('user_id')
-//            ->constrained()
-//            ->onUpdate('cascade')
-//            ->onDelete('cascade');
+           $table->foreignId('admin_id')
+           ->constrained()
+           ->onUpdate('cascade')
+           ->onDelete('cascade');
             $table->string('title');
             $table->tinyinteger('status');
 

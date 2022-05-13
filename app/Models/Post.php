@@ -10,18 +10,11 @@ class Post extends BaseModel
 {
 
 
-//    protected $table = 'post';
-
-//    protected $fallible = ['user_id ', 'title', 'status', 'text'];
-
     protected $guarded=[];
 
-//    public function user(): HasOne
-//    {
-//
-//        return $this->hasOne(User::class, 'user_id');
-//    }
-
-
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class, 'admin_id');
+    }
 
 }

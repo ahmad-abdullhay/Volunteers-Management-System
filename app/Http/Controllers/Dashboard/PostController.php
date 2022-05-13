@@ -18,4 +18,12 @@ class PostController extends CrudController
     {
         parent::__construct($postService, $request);
     }
+
+    public function readAll(){
+        return $this->handleSharedMessage($this->service->readAll());
+    }
+
+    public function readOne($id){
+        return $this->handleSharedMessage($this->service->readOne($id));
+    }
 }

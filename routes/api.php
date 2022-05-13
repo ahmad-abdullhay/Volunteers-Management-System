@@ -30,6 +30,10 @@ use App\Http\Controllers\Dashboard\PostController;
 
 Route::group(['prefix' => 'mobile'], function () {
     require_once base_path('routes/mobile.php');
+    Route::group(['prefix' => 'posts'], function () {
+        Route::get('read-one/{id}',[PostController::class,'readOne']);
+        Route::get('read-all',[PostController::class,'readAll']);
+    });
 
 });
 
@@ -38,7 +42,6 @@ Route::prefix('dashboard')->group(function () {
 
     //Admin Login Route.
     Route::post('/login', [AuthController::class, 'login']);
-    Route::resource('posts',PostController ::class);
 
 
     Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function(){
@@ -49,6 +52,9 @@ Route::prefix('dashboard')->group(function () {
         Route::resource('roles', RoleController::class);
 
         //End Roles && Permissions.
+
+        Route::resource('posts',PostController ::class);
+
 
         Route::resource('join-requests', JoinRequestController::class);
         Route::resource('events', EventController::class);
