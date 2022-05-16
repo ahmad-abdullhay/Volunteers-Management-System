@@ -35,6 +35,7 @@ class CrudController extends BaseController
      */
     public function index(MainRequest $request)
     {
+        $filters = $request->query();
         return $this->handleSharedMessage(
             $this->service->index(
                 $this->columns,
@@ -42,6 +43,7 @@ class CrudController extends BaseController
                 $request->per_page ?? $this->length,
                 $request->sort_keys ?? ['id'],
                 $request->sort_dir ?? ['desc'],
+                $filters,
                 $request->search ?? null
             )
         );
