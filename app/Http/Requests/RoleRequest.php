@@ -37,7 +37,7 @@ class RoleRequest extends MainRequest
                 ];
             case 'PUT':
                 return [
-                    'name' => 'required|unique:roles,name'.$role,
+                    'name' => 'required|unique:roles,name,'.$role,
                     'permissions.*' => 'exists:permissions,id'
                 ];
             default:break;
