@@ -30,10 +30,7 @@ use App\Http\Controllers\Dashboard\PostController;
 
 Route::group(['prefix' => 'mobile'], function () {
     require_once base_path('routes/mobile.php');
-    Route::group(['prefix' => 'posts'], function () {
-        Route::get('read-one/{id}',[PostController::class,'readOne']);
-        Route::get('read-all',[PostController::class,'readAll']);
-    });
+
 
 });
 
