@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboard\JoinRequestController;
 use App\Http\Controllers\Dashboard\EventController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\MetricController;
+use App\Http\Controllers\Dashboard\BadgeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +56,9 @@ Route::prefix('dashboard')->group(function () {
 
         Route::patch('join-request/:join-request', [JoinRequestController::class, 'changeRequestStatus']);
         Route::patch('activate-volunteer/{user}', [UserController::class, 'activateVolunteer']);
+
+        Route::resource('badge', BadgeController::class);
+        Route::post('badge/add-to-user', [BadgeController::class,'addBadgeUser']);
 
     });
 

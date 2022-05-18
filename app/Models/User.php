@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\BadgeService;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -58,5 +59,10 @@ class User extends BaseModel implements
     public function events()
     {
         return $this->belongsToMany(Event::class);
+    }
+
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class);
     }
 }
