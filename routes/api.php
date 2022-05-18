@@ -8,7 +8,7 @@ use App\Http\Controllers\Dashboard\JoinRequestController;
 use App\Http\Controllers\Dashboard\EventController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\MetricController;
-use App\Http\Controllers\Dashboard\BadgeController;
+use App\Http\Controllers\Dashboard\Badge\BadgeController;
 
 /*
 |--------------------------------------------------------------------------

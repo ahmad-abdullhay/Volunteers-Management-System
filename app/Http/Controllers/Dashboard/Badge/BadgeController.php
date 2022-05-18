@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard;
+namespace App\Http\Controllers\Dashboard\Badge;
 
 use App\Http\Controllers\CrudController;
 use App\Http\Requests\Badge\AddBadgeUserRequest;
@@ -9,7 +9,7 @@ use App\Http\Requests\EventRequest;
 use App\Services\BadgeService;
 use App\Services\EventService;
 
-class BadgeController extends CrudController
+class BadgeController extends BadgeCRUDController
 {
     /**
      * Create a new instance form branch repository.
@@ -24,7 +24,7 @@ class BadgeController extends CrudController
         parent::__construct($service, $request);
     }
 
-    public function addBadgeUser(AddBadgeUserRequest $payload ){
+    public function addBadgeUser($payload){
         return $this->handleSharedMessage($this->service->addBadgeToUser($payload));
     }
 }
