@@ -43,7 +43,9 @@ class EventRequest extends MainRequest
                             ->where('is_active', User::ACTIVE_STATUS),
                     ],
                     'metrics'                       => 'array',
-                    'metrics.*'                     => 'exists:metrics,id'
+                    'metrics.*'                     => 'exists:metrics,id',
+                    'categories'                       => 'array',
+                    'categories.*'                     => 'exists:categories,id'
                 ];
             default:break;
         }

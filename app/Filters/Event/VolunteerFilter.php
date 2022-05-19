@@ -3,6 +3,7 @@
 namespace App\Filters\Event;
 
 use App\Filters\Interfaces\Filter;
+use App\Models\EventUser;
 use Illuminate\Database\Eloquent\Builder;
 
 class VolunteerFilter implements Filter
@@ -22,7 +23,7 @@ class VolunteerFilter implements Filter
         if ($value !== null){
             //Apply suitable filter for this value.
             $builder->whereHas('users', function ($query) use ($value){
-               $query->where('user_id', $value);
+               $query->where('user_id', $value)->where('status', EventUser::ACCEPTED_STATUS);
             });
         }
     }

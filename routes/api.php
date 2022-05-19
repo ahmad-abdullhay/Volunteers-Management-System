@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboard\JoinRequestController;
 use App\Http\Controllers\Dashboard\EventController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\MetricController;
+use App\Http\Controllers\Dashboard\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,9 @@ Route::prefix('dashboard')->group(function () {
         //StartMetric Routes.
 
         Route::apiResource('metrics', MetricController::class);
+
+        //Categories Routes.
+        Route::apiResource('categories', CategoryController::class);
 
         //End Metric Routes.
 
