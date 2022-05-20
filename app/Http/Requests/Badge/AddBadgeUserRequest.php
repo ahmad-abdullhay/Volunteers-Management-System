@@ -27,11 +27,9 @@ class AddBadgeUserRequest extends MainRequest
     public function rules()
     {
         return [
-            'user_id'  => [Rule::exists('users', 'id')
-                ->where('is_active', User::ACTIVE_STATUS),
-            ],
+            'user_id'  => "integer",
             'badge_id'  => [Rule::exists('badges', 'id')],
-            'notes'  => 'string'
+            'note'  => 'string'
 
         ];
     }

@@ -3,7 +3,7 @@
 namespace App\Repositories\Eloquent;
 
 use App\Models\Badge;
-use App\Models\VolunteersBadge;
+use App\Models\BadgeUser;
 
 class BadgeRepository extends BaseRepository
 {
@@ -18,6 +18,6 @@ class BadgeRepository extends BaseRepository
     }
 
     public function addBadgeToUser(array $payload){
-        return VolunteersBadge::create($payload);
+        return BadgeUser::create($payload);
     }
 }

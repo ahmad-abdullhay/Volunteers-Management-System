@@ -16,9 +16,19 @@ class BadgeService extends BaseService
         parent::__construct($repository);
     }
 
-    public function addBadgeToUser($payload){
+    public function addBadgeToUser(array $payload){
         return new SharedMessage(__('success.store', ['model' => $this->modelName]),
             $this->repository->addBadgeToUser($payload),
+            true,
+            null,
+            200
+        );
+    }
+
+    public function indexWithIsErenAttribute(): SharedMessage
+    {
+        return new SharedMessage(__('success.store', ['model' => $this->modelName]),
+            $this->repository,
             true,
             null,
             200
