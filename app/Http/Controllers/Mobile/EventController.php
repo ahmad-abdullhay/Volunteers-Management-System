@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Mobile;
 
 use App\Http\Controllers\BaseController;
+use App\Models\Event;
 use App\Services\EventService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -36,4 +38,14 @@ class EventController extends BaseController
         );
     }
 
+    /**
+     * @param Event $event
+     * @return JsonResponse
+     */
+    public function getEventUsers(Event $event)
+    {
+        return $this->handleSharedMessage(
+            $this->eventService->getEventUsers($event)
+        );
+    }
 }

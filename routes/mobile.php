@@ -25,11 +25,18 @@ Route::group(['middleware' => ['auth:sanctum', 'type.user']], function (){
 
     //End Metric Routes.
 
+    //Start Event Routes.
+    Route::get('event/users/{event}  ', [EventController::class, 'getEventUsers']);
     Route::get('events', [EventController::class, 'index']);
-    Route::get('badges', [BadgeController::class, 'index']);
+
 
 
 
 //    Route::get('badges/{user_id}', [BadgeController::class, 'index']);
+
+    //End Event Routes.
+    Route::get('badges', [BadgeController::class, 'index']);
+
+
 
 });

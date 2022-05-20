@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Common\SharedMessage;
+use App\Models\Event;
 use App\Models\EventUser;
 use App\Repositories\Eloquent\EventRepository;
 use App\Services\Shared\BaseService;
@@ -45,7 +46,19 @@ class EventService extends BaseService
 
 
         return parent::store($payload);
-
     }
 
+    /**
+     * @param Event $event
+     * @return SharedMessage
+     */
+    public function getEventUsers(Event $event)
+    {
+        return new SharedMessage(__('success.store', ['model' => $this->modelName]),
+            $this->repository->getEventUsers($event),
+            true,
+            null,
+            200
+        );
+    }
 }

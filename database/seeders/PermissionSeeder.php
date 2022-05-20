@@ -15,10 +15,10 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        $role = Role::findOrCreate('Super Admin', 'admin');
+        $role = Role::findOrCreate('Super Admin', 'admins');
 
         foreach ( config('permission.permissions') as $permission) {
-            Permission::findOrCreate($permission, 'admin');
+            Permission::findOrCreate($permission, 'admins');
             $role->givePermissionTo($permission);
         }
     }
