@@ -35,10 +35,10 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
         $event->save();
     }
 
-    public function getEventUsers(Event $event)
+    public function getEventUsers(Event $event, $status)
     {
-        return Event::where('id', $event->id)->with('users', function ($query){
-           $query->where('status', EventUser::ACCEPTED_STATUS);
+        return Event::where('id', $event->id)->with('users', function ($query) use ($status){
+           $query->where('status', $status);
         })->first();
     }
 }

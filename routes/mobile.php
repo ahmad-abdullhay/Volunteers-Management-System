@@ -11,6 +11,8 @@ Route::post('/sign-up', [AuthController::class, 'signUp']);
 
 Route::group(['middleware' => ['auth:sanctum', 'type.user']], function (){
 
+    Route::get('me', [AuthController::class, 'me']);
+
     Route::get('/test', function (){
         dd(auth()->user());
     });
@@ -25,7 +27,12 @@ Route::group(['middleware' => ['auth:sanctum', 'type.user']], function (){
     //End Metric Routes.
 
     //Start Event Routes.
+    //Get only pending users that want to join the event.
+    Route::get('event/users/pending/{event}', [EventController::class, 'getEventsRequests']);
+
+    //Get Accepted users.
     Route::get('event/users/{event}  ', [EventController::class, 'getEventUsers']);
+
     Route::get('events', [EventController::class, 'index']);
     //End Event Routes.
 

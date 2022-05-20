@@ -40,6 +40,8 @@ Route::prefix('dashboard')->group(function () {
 
     Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function(){
 
+        Route::get('me', [AuthController::class, 'me']);
+
         // Start Roles && Permissions.
 
         Route::get('permissions', [RoleController::class, 'permissions']);

@@ -32,6 +32,7 @@ class User extends BaseModel implements
 
     protected $guarded = [];
 
+
     protected array $filterables = [
         StatusFilter::class
     ];

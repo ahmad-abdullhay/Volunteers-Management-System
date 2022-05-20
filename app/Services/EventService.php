@@ -52,10 +52,10 @@ class EventService extends BaseService
      * @param Event $event
      * @return SharedMessage
      */
-    public function getEventUsers(Event $event)
+    public function getEventUsers(Event $event , $status)
     {
         return new SharedMessage(__('success.store', ['model' => $this->modelName]),
-            $this->repository->getEventUsers($event),
+            $this->repository->getEventUsers($event, $status),
             true,
             null,
             200

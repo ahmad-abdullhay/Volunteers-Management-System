@@ -14,7 +14,6 @@ class UserController extends BaseController
     public function __construct(UserService $userService)
     {
         $this->userService = $userService;
-
     }
 
     public function joinEvent(JoinEventRequest $request)

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Filters\Event\StatusFilter;
 use App\Filters\Event\VolunteerFilter;
 use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\HasMedia;
@@ -21,6 +22,7 @@ class Event extends BaseModel implements HasMedia
 
     protected array $filterables = [
         VolunteerFilter::class,
+        StatusFilter::class
     ];
 
     public function users()
