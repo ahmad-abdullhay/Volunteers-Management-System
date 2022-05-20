@@ -9,6 +9,8 @@ use App\Http\Controllers\Dashboard\EventController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\MetricController;
 use App\Http\Controllers\Dashboard\CategoryController;
+use App\Http\Controllers\Dashboard\UserCrudController;
+use App\Http\Controllers\Dashboard\Admin\AdminCrudController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +61,9 @@ Route::prefix('dashboard')->group(function () {
 
         Route::patch('join-request/:join-request', [JoinRequestController::class, 'changeRequestStatus']);
         Route::patch('activate-volunteer/{user}', [UserController::class, 'activateVolunteer']);
+
+        Route::apiResource('users', UserCrudController::class);
+        Route::apiResource('admins', AdminCrudController::class);
 
     });
 
