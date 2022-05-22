@@ -23,7 +23,6 @@ class PostRequest extends MainRequest
                 return [
                     'title'                          => 'required|string',
                     'text'                   => 'required|string',
-                    'admin_id'                    => 'required|integer',
                     'status'    => 'required|string'
                 ];
             default:break;
