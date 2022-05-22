@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Badge;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class RoleRequest extends MainRequest
+use App\Http\Requests\MainRequest;
+
+class BadgeRequest extends MainRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,21 +24,16 @@ class RoleRequest extends MainRequest
      */
     public function rules()
     {
-        $role = $this->route()->role;
         switch($this->method()) {
             case 'GET':
             case 'PATCH':
             case 'DELETE':
                 return [];
+
             case 'POST':
                 return [
-                    'name' => 'required|unique:roles,name',
-                    'permissions.*' => 'exists:permissions,id'
-                ];
-            case 'PUT':
-                return [
-                    'name' => 'required|unique:roles,name,'.$role,
-                    'permissions.*' => 'exists:permissions,id'
+                    'name'                          => 'required|string',
+                    'description'                   => 'required|string'
                 ];
             default:break;
         }

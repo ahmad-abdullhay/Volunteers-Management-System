@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Mobile;
 
+use App\Common\SharedMessage;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Mobile\Auth\LoginRequest;
 use App\Http\Requests\Mobile\Auth\SignUpRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends BaseController
@@ -15,11 +17,24 @@ class AuthController extends BaseController
 
     }
 
+    public function me()
+    {
+        $user = Auth::user();
+
+        return $this->success(__('success.signup'), $user,200);
+    }
     public function login(LoginRequest $request)
     {
         $payload = $request->only('phone', 'password');
         if (!auth('user')->attempt($payload)) {
-            return $this->error(['error' => __('errors.wrong_number_or_password')], 401);
+            return $this->handleSharedMessage(new SharedMessage(
+                'errors.wrong_number_or_password',
+                [],
+                null,
+                null,
+                401
+            ));
+
         }
         $user = auth()->guard('user')->user();
 

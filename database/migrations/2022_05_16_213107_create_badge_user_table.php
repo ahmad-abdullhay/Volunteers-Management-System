@@ -13,24 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('event_user', function (Blueprint $table) {
+        Schema::create('badge_user', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignId('event_id')
-                ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-
+            $table->string("note");
             $table->foreignId('user_id')
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-
-            $table->tinyInteger('status')
-                ->comment('(0) => Rejected, (1) => Accepted, (2) => Pending')->default(2);
-
-            $table->tinyInteger('is_supervisor')->comment('(0) => No, (1) => Yes')->default(0);
-
+            $table->foreignId('badge_id')
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -42,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('event_user');
+        Schema::dropIfExists('volunteers_badges');
     }
 };

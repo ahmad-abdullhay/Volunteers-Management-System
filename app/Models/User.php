@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+
+use App\Services\BadgeService;
+
+use App\Filters\User\StatusFilter;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -31,6 +35,11 @@ class User extends BaseModel implements
 
     protected $guarded = [];
 
+
+    protected array $filterables = [
+        StatusFilter::class
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -58,5 +67,10 @@ class User extends BaseModel implements
     public function events()
     {
         return $this->belongsToMany(Event::class);
+    }
+
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class);
     }
 }

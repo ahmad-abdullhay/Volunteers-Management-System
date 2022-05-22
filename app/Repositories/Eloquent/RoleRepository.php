@@ -26,7 +26,7 @@ class RoleRepository
     public function create(array $payload): ?Model
     {
         //Assign Default Guard name To Payload.
-        $payload['guard_name'] = 'admin';
+        $payload['guard_name'] = 'admins';
 
         //Create Role.
         $role = SpaiteRole::create($payload);
@@ -50,7 +50,7 @@ class RoleRepository
     public function update(int $id, array $payload)
     {
         //Assign Default Guard name To Payload.
-        $payload['guard_name'] = $payload['guard_name'] ?? 'admin';
+        $payload['guard_name'] = $payload['guard_name'] ?? 'admins';
 
         $role = SpaiteRole::where('id', $id)->first();
 

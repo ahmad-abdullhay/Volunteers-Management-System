@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Filters\Event;
+namespace App\Filters\Admin;
 
 use App\Filters\Interfaces\Filter;
-use App\Models\EventUser;
 use Illuminate\Database\Eloquent\Builder;
 
-class VolunteerFilter implements Filter
+class StatusFilter implements Filter
 {
-    public string $column = "user_id";
+    public string $column = "status";
 
     /**
      * Apply a given search value to the builder instance.
@@ -22,9 +21,7 @@ class VolunteerFilter implements Filter
 
         if ($value !== null){
             //Apply suitable filter for this value.
-            $builder->whereHas('users', function ($query) use ($value){
-               $query->where('user_id', $value)->where('status', EventUser::ACCEPTED_STATUS);
-            });
+            $builder->where('status', $value);
         }
     }
 }

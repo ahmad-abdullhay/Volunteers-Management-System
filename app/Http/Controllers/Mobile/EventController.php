@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Mobile;
 
 use App\Http\Controllers\BaseController;
+use App\Http\Requests\Mobile\Event\SuperVisorEventRequest;
+use App\Models\Event;
+use App\Models\EventUser;
 use App\Services\EventService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,11 +21,13 @@ class EventController extends BaseController
 
     public function index(Request $request)
     {
-        $filters = [];
-        $params = $request->query();
+        $filters = $request->query();
 
-        if (isset($params['myEvents']))
+        if (isset($filters['myEvents'])){
+
             $filters['user_id'] = Auth::id();
+            unset($filters['myEvents']);
+        }
 
         return $this->handleSharedMessage(
             $this->eventService->index(
@@ -36,4 +42,21 @@ class EventController extends BaseController
         );
     }
 
+    /**
+     * @param Event $event
+     * @return JsonResponse
+     */
+    public function getEventUsers(Event $event)
+    {
+        return $this->handleSharedMessage(
+            $this->eventService->getEventUsers($event, EventUser::ACCEPTED_STATUS)
+        );
+    }
+
+    public function getEventsRequests(SuperVisorEventRequest $request, Event $event)
+    {
+        return $this->handleSharedMessage(
+            $this->eventService->getEventUsers($event, EventUser::PENDING_STATUS)
+        );
+    }
 }

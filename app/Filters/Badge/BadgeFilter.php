@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Filters\Event;
+namespace App\Filters\Badge;
 
 use App\Filters\Interfaces\Filter;
-use App\Models\EventUser;
 use Illuminate\Database\Eloquent\Builder;
 
-class VolunteerFilter implements Filter
+class BadgeFilter implements Filter
 {
     public string $column = "user_id";
 
@@ -23,7 +22,7 @@ class VolunteerFilter implements Filter
         if ($value !== null){
             //Apply suitable filter for this value.
             $builder->whereHas('users', function ($query) use ($value){
-               $query->where('user_id', $value)->where('status', EventUser::ACCEPTED_STATUS);
+               $query->where('user_id', $value);
             });
         }
     }

@@ -12,6 +12,14 @@ use App\Http\Controllers\Dashboard\PostController;
 
 
 
+use App\Http\Controllers\Dashboard\Badge\BadgeController;
+use App\Http\Controllers\Dashboard\Badge\BadgeCRUDController;
+
+use App\Http\Controllers\Dashboard\CategoryController;
+use App\Http\Controllers\Dashboard\UserCrudController;
+use App\Http\Controllers\Dashboard\Admin\AdminCrudController;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -43,6 +51,8 @@ Route::prefix('dashboard')->group(function () {
 
     Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function(){
 
+        Route::get('me', [AuthController::class, 'me']);
+
         // Start Roles && Permissions.
 
         Route::get('permissions', [RoleController::class, 'permissions']);
@@ -63,10 +73,21 @@ Route::prefix('dashboard')->group(function () {
 
         Route::apiResource('metrics', MetricController::class);
 
+        //Categories Routes.
+        Route::apiResource('categories', CategoryController::class);
+
         //End Metric Routes.
 
         Route::patch('join-request/:join-request', [JoinRequestController::class, 'changeRequestStatus']);
         Route::patch('activate-volunteer/{user}', [UserController::class, 'activateVolunteer']);
+
+
+        Route::resource('badge', BadgeCRUDController::class);
+        Route::post('badge/add-to-user', [BadgeController::class,'addBadgeUser']);
+
+        Route::apiResource('users', UserCrudController::class);
+        Route::apiResource('admins', AdminCrudController::class);
+
 
     });
 

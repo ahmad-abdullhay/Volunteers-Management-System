@@ -191,7 +191,7 @@ class BaseRepository implements RepositoryInterface
 
         if (!$this->model->translatedAttributes){
             unset($payload['en']);
-            unset($payload['es']);
+            unset($payload['ar']);
         }
 
         $model->update($payload);

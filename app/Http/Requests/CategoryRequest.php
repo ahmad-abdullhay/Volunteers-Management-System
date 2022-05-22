@@ -2,10 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
-
-class RoleRequest extends MainRequest
+class CategoryRequest extends MainRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,21 +21,16 @@ class RoleRequest extends MainRequest
      */
     public function rules()
     {
-        $role = $this->route()->role;
         switch($this->method()) {
             case 'GET':
             case 'PATCH':
             case 'DELETE':
                 return [];
+            case 'PUT':
             case 'POST':
                 return [
-                    'name' => 'required|unique:roles,name',
-                    'permissions.*' => 'exists:permissions,id'
-                ];
-            case 'PUT':
-                return [
-                    'name' => 'required|unique:roles,name,'.$role,
-                    'permissions.*' => 'exists:permissions,id'
+                    'name'                          => 'required|string',
+                    'description'                   => 'string',
                 ];
             default:break;
         }

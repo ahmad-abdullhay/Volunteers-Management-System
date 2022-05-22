@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Filters\Event\StatusFilter;
 use App\Filters\Event\VolunteerFilter;
 use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\HasMedia;
@@ -13,14 +14,15 @@ class Event extends BaseModel implements HasMedia
 
     protected $guarded = [];
 
-    protected $with = ['media'];
+    protected $with = ['media', 'categories'];
 
-    protected $appends = ['isSuperVisor'];
+    protected $appends = ['isSuperVisor', 'joinRequestStatus'];
 
-    protected array $manyToManyRelations = ['metrics'];
+    protected array $manyToManyRelations = ['metrics', 'categories'];
 
     protected array $filterables = [
         VolunteerFilter::class,
+        StatusFilter::class
     ];
 
     public function users()
@@ -33,6 +35,11 @@ class Event extends BaseModel implements HasMedia
         return $this->belongsToMany(Metric::class);
     }
 
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'event_category');
+    }
+
     public function getIsSuperVisorAttribute()
     {
         if (get_class(Auth::user()) === User::class){
@@ -40,6 +47,17 @@ class Event extends BaseModel implements HasMedia
                 ->where('user_id', Auth::id())->first();
             if ($relation)
                 return $relation->is_supervisor;
+        }
+        return 0;
+    }
+
+    public function getJoinRequestStatusAttribute()
+    {
+        if (get_class(Auth::user()) === User::class){
+            $relation = EventUser::select('status')->where('event_id', $this->id)
+                ->where('user_id', Auth::id())->first();
+            if ($relation)
+                return $relation->status;
         }
         return 0;
     }
