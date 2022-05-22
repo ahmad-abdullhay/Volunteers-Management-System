@@ -8,6 +8,9 @@ use App\Http\Controllers\Dashboard\JoinRequestController;
 use App\Http\Controllers\Dashboard\EventController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\MetricController;
+use App\Http\Controllers\Dashboard\PostController;
+
+
 
 use App\Http\Controllers\Dashboard\Badge\BadgeController;
 use App\Http\Controllers\Dashboard\Badge\BadgeCRUDController;
@@ -35,6 +38,8 @@ use App\Http\Controllers\Dashboard\Admin\AdminCrudController;
 
 Route::group(['prefix' => 'mobile'], function () {
     require_once base_path('routes/mobile.php');
+
+
 });
 
 
@@ -42,6 +47,7 @@ Route::prefix('dashboard')->group(function () {
 
     //Admin Login Route.
     Route::post('/login', [AuthController::class, 'login']);
+
 
     Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function(){
 
@@ -53,11 +59,17 @@ Route::prefix('dashboard')->group(function () {
         Route::resource('roles', RoleController::class);
 
         //End Roles && Permissions.
+        Route::get('posts/accept/{id}',[PostController ::class,'acceptPost']);
+
+        Route::resource('posts',PostController ::class);
+
 
         Route::patch('join-requests/change-status/{id}', [JoinRequestController::class, 'changeRequestStatus']);
 
         Route::resource('join-requests', JoinRequestController::class);
         Route::resource('events', EventController::class);
+
+
 
         //StartMetric Routes.
 
