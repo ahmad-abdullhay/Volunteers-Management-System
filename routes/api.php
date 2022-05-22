@@ -54,6 +54,8 @@ Route::prefix('dashboard')->group(function () {
 
         //End Roles && Permissions.
 
+        Route::patch('join-requests/change-status/{id}', [JoinRequestController::class, 'changeRequestStatus']);
+
         Route::resource('join-requests', JoinRequestController::class);
         Route::resource('events', EventController::class);
 
@@ -66,7 +68,7 @@ Route::prefix('dashboard')->group(function () {
 
         //End Metric Routes.
 
-        Route::patch('join-request/:join-request', [JoinRequestController::class, 'changeRequestStatus']);
+
         Route::patch('activate-volunteer/{user}', [UserController::class, 'activateVolunteer']);
 
 

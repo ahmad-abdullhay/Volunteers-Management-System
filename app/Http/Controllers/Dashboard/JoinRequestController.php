@@ -24,10 +24,10 @@ class JoinRequestController extends CrudController
         parent::__construct($service, $request);
     }
 
-    public function changeRequestStatus($modelId)
+    public function changeRequestStatus($id)
     {
         return $this->handleSharedMessage(
-            $this->service->changeRequestStatus($modelId, JoinRequest::STATUS_WAITING_FOR_HR_OFFICER)
+            $this->service->changeRequestStatus($id, JoinRequest::STATUS_WAITING_FOR_HR_OFFICER)
         );
     }
 }
