@@ -11,39 +11,6 @@ use Illuminate\Http\Request;
 class BaseController extends Controller
 {
     /**
-     * Core of response
-     *
-     * @param string $message
-     * @param mixed $data
-     * @param integer $statusCode
-     * @param boolean $isSuccess
-     * @param array $errors
-     * @return JsonResponse
-     */
-    public function coreResponse(string $message, $data, int $statusCode, array $errors, bool $isSuccess = true): JsonResponse
-    {
-        // Check the params
-        if (!$message && !$errors) return response()->json(['message' => 'Message is required'], 500);
-
-        // Send the response
-        if ($isSuccess)
-            return response()->json([
-                'message' => $message,
-                'status' => true,
-                'data' => $data,
-                'status_code' => $statusCode
-            ]);
-
-        return response()->json([
-            'message' => $message,
-            'status' => false,
-            'data' => null,
-            'errors' => $errors,
-            'status_code' => $statusCode
-        ]);
-    }
-
-    /**
      * Handle manager messages.
      * @param SharedMessage $message
      * @return JsonResponse
@@ -89,5 +56,38 @@ class BaseController extends Controller
     public function error(array $messages, int $statusCode = 500): JsonResponse
     {
         return $this->coreResponse("", null, $statusCode , $messages, false);
+    }
+
+    /**
+     * Core of response
+     *
+     * @param string $message
+     * @param mixed $data
+     * @param integer $statusCode
+     * @param boolean $isSuccess
+     * @param array $errors
+     * @return JsonResponse
+     */
+    public function coreResponse(string $message, $data, int $statusCode, array $errors, bool $isSuccess = true): JsonResponse
+    {
+        // Check the params
+        if (!$message && !$errors) return response()->json(['message' => 'Message is required'], 500);
+
+        // Send the response
+        if ($isSuccess)
+            return response()->json([
+                'message' => $message,
+                'status' => true,
+                'data' => $data,
+                'status_code' => $statusCode
+            ]);
+
+        return response()->json([
+            'message' => $message,
+            'status' => false,
+            'data' => null,
+            'errors' => $errors,
+            'status_code' => $statusCode
+        ]);
     }
 }

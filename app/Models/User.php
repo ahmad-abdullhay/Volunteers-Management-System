@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+
+use App\Services\BadgeService;
+
 use App\Filters\User\StatusFilter;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\MustVerifyEmail;
@@ -64,5 +67,10 @@ class User extends BaseModel implements
     public function events()
     {
         return $this->belongsToMany(Event::class);
+    }
+
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class);
     }
 }
