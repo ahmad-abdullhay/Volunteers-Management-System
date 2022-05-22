@@ -19,4 +19,6 @@ class JoinRequest extends BaseModel
     {
         return $this->belongsTo(Admin::class, 'admin_id');
     }
+
+    protected $with = ['user', 'admin'];
 }

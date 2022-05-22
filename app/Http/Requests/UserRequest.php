@@ -31,7 +31,6 @@ class UserRequest extends MainRequest
             case 'POST':
                 return [
                     'name'                  => 'required',
-                    'username'              => 'required|unique:users,username',
                     'email'                 => 'required|email|unique:users,email',
                     'date_of_birth'         => 'required',
                     'phone'                 => 'required|unique:users,phone',
@@ -43,7 +42,6 @@ class UserRequest extends MainRequest
             case 'PUT':
                 return [
                     'name'                  => 'required',
-                    'username'              => 'required|unique:users,username,'. $user,
                     'email'                 => 'required|email|unique:users,email,'. $user,
                     'date_of_birth'         => 'required',
                     'phone'                 => 'required|unique:users,phone,' .$user,

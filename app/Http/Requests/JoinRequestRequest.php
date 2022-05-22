@@ -32,16 +32,7 @@ class JoinRequestRequest extends MainRequest
                 return [];
             case 'POST':
                 return [
-                    'name'                  => 'required',
-                    'username'              => 'required|unique:users,username',
-                    'email'                 => 'required|email|unique:users,email',
-                    'date_of_birth'         => 'required',
-                    'phone'                 => 'required|unique:users,phone',
-                    'gender'                => 'required|integer|between:1,2',
-                    'location'              => 'required|string',
-                    'job'                   => 'required|string',
-                    'volunteering_history'  => 'string'
-
+                    B
                 ];
             case 'PUT':
                 return [
