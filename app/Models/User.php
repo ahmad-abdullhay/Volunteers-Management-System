@@ -6,7 +6,6 @@ namespace App\Models;
 use App\Services\BadgeService;
 
 use App\Filters\User\StatusFilter;
-g
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Auth\Passwords\CanResetPassword;
