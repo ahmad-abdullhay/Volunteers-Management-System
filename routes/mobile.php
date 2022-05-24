@@ -31,6 +31,8 @@ Route::group(['middleware' => ['auth:sanctum', 'type.user']], function (){
     //Start Metric Routes.
     Route::post('metric/insert-value', [MetricController::class, 'insertMetricForUser']);
 
+    Route::get('metric/get-event-metrics/{event}', [MetricController::class, 'getEventMetrics']);
+    Route::get('metric/metrics-event-user', [MetricController::class, 'getEventUserMetricValues']);
     //End Metric Routes.
 
     //Start Event Routes.
