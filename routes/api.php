@@ -18,7 +18,8 @@ use App\Http\Controllers\Dashboard\Badge\BadgeCRUDController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\UserCrudController;
 use App\Http\Controllers\Dashboard\Admin\AdminCrudController;
-use App\Http\Controllers\Dashboard\MailCategoryController;
+use App\Http\Controllers\Dashboard\Message\MailCategoryController;
+use App\Http\Controllers\Dashboard\Message\MailController;
 
 
 /*
@@ -88,7 +89,8 @@ Route::prefix('dashboard')->group(function () {
         Route::resource('badge', BadgeCRUDController::class);
         Route::post('badge/add-to-user', [BadgeController::class,'addBadgeUser']);
 
-        Route::resource('mail-category', MailCategoryController::class);
+        Route::resource('mail-categories', MailCategoryController::class);
+        Route::resource('mail', MailController::class);
 
 
         Route::apiResource('users', UserCrudController::class);

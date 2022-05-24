@@ -11,6 +11,8 @@ class BaseModel extends Model
     //Define Translatable Columns.
     public $translatedAttributes  = [];
 
+    public string|null $relatedToCurrentUser = null;
+
     //Define Array Filters.
     protected array $filterables = [];
 

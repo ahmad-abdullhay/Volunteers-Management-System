@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard;
+namespace App\Http\Controllers\Dashboard\Message;
 
 use App\Http\Controllers\CrudController;
 use App\Http\Requests\MailCategoryRequest;

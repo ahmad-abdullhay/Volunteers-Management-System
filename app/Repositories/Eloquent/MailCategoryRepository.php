@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Eloquent;
 
-use App\Models\MailCategory;
+use App\Models\Message\MailCategory;
 
 class MailCategoryRepository extends BaseRepository
 {
