@@ -81,6 +81,18 @@ Route::prefix('dashboard')->group(function () {
         //End Metric Routes.
 
 
+        //
+
+        Route::apiResource('metricQuery', \App\Http\Controllers\Dashboard\MetricQueryController::class);
+        //
+        Route::apiResource('pointRule', \App\Http\Controllers\Dashboard\PointRuleController::class);
+
+
+        Route::get('event/end/{event}', [EventController::class, 'eventEnd']);
+
+
+
+
         Route::patch('activate-volunteer/{user}', [UserController::class, 'activateVolunteer']);
 
 
