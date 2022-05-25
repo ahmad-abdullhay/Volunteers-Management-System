@@ -68,34 +68,30 @@ class EventService extends BaseService
     }
     public function eventEnd (Event $event,PointRuleService $service,BadgeConditionService $badgeService){
         $metricsList = EventMetric::where('event_id', $event->id)->get();
-        $list = [];
+        // this list to store processed badge (to not process it again)
+        $badgeList = [];
         foreach ($metricsList as &$metric){
-           //
+           // get all queries linked to this metric
             $queryList = MetricQuery::where('metric_id',$metric->metric_id)->get();
             foreach ($queryList as &$query) {
-
+                // check if query is for point rule
                 $pointRule =  PointRule::where('metric_query_id',$query->id)->first();
+               if ($pointRule != null){
+                 $service->apply ($event,$pointRule,$query);
+                 continue;
+               }
 
-//               if ($pointRule != null){
-//                 $e = $service->apply ($event,$pointRule,$query);
-//                   array_push($list,$e);
-//               }
+               // check if query is for badge condition
                 $BadgeCondition =  BadgeCondition::where('metric_query_id',$query->id)->first();
                 if ($BadgeCondition != null){
-
                     $badge = Badge::where('id',$BadgeCondition->badge_id)->first();
-                    if ($badge != null && !in_array($badge->id, $list)){
-
-                        array_push($list,$badge->id);
-                        return  $badgeService->apply($event,$badge) ;
+                    if ($badge != null && !in_array($badge->id, $badgeList)){
+                        array_push($badgeList,$badge->id);
+                         $badgeService->apply($event,$badge) ;
                     }
                 }
-
-
             }
-
         }
-     //  return $list;
-        //return [$event];
+
     }
 }
