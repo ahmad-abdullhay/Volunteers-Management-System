@@ -15,6 +15,8 @@ class MetricOperations
             "equal" => $this->equal($compareValue,$value),
             "more" => $this->more($compareValue,$value),
             "less" => $this->less($compareValue,$value),
+            "isTrue" => $this->isTrue($compareValue),
+            "isFalse" => $this->isFalse($compareValue),
             default => null,
         };
      //  $result = $this->doOperation()
@@ -34,7 +36,14 @@ class MetricOperations
     {
         return $compareValue < $value;
     }
-
+    public function isTrue($compareValue)
+    {
+        return $compareValue == 1;
+    }
+    public function isFalse($compareValue)
+    {
+        return $compareValue == 0;
+    }
 
     public function doOperation($operation, $valueList)
     {
@@ -45,6 +54,12 @@ class MetricOperations
             "count" => $this->countArray($valueList),
             "max" => $this->maxArray($valueList),
             "min" => $this->minArray($valueList),
+            "allTrue" => $this->allTrue($valueList),
+            "allFalse" => $this->allFalse($valueList),
+            "trueCount" => $this->trueCount($valueList),
+            "falseCount" => $this->falseCount($valueList),
+            "mostFalse" => $this->mostFalse($valueList),
+            "mostTrue" => $this->mostTrue($valueList),
             default => null,
         };
     }
@@ -78,5 +93,43 @@ class MetricOperations
     {
         return min($valueList);
     }
+    public function allTrue($valueList)
+    {
+        foreach ($valueList as &$value){
+            if ($value == 0)
+                return false;
+        }
+        return true;
+    }
 
+    public function allFalse($valueList)
+    {
+        foreach ($valueList as &$value){
+            if ($value == 1)
+                return false;
+        }
+        return true;
+    }
+    public function trueCount ($valueList){
+        $counter = 0;
+        foreach ($valueList as &$value){
+            if ($value == 1)
+                $counter++;
+        }
+        return $counter;
+    }
+    public function falseCount ($valueList){
+        $counter = 0;
+        foreach ($valueList as &$value){
+            if ($value == 0)
+                $counter++;
+        }
+        return $counter;
+    }
+    public function mostTrue ($valueList){
+          return  $this->trueCount($valueList) > $this->countArray($valueList);
+    }
+    public function mostFalse ($valueList){
+        return  $this->falseCount($valueList) > $this->countArray($valueList);
+    }
 }

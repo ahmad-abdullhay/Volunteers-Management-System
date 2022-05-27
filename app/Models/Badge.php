@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Filters\Badge\BadgeFilter;
+use App\Models\Metric\BadgeCondition;
+use App\Models\Metric\MetricQuery;
 use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -30,6 +32,9 @@ class Badge extends BaseModel implements HasMedia
         return $this->belongsToMany(User::class);
     }
 
+    public function badgeCondition() {
+        return $this->hasMany(BadgeCondition::class,'badge_id','id');
+    }
     public function getIsTakenAttribute()
     {
         if (get_class(Auth::user()) === User::class){

@@ -21,4 +21,9 @@ class Metric extends BaseModel
     {
         return $this->belongsToMany(Event::class);
     }
+    public function isList($type){
+        return $type == Metric::BOOLEAN_LIST_TYPE ||
+            $type == Metric::STRING_LIST_TYPE ||
+            $type == Metric::INTEGER_LIST_TYPE;
+    }
 }

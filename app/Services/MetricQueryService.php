@@ -14,4 +14,20 @@ class MetricQueryService extends BaseService
         $this->repository = $repository;
         parent::__construct($repository);
     }
+
+    public function newPointRuleMetricQuery ($payload)
+    {
+        $payload['second_operation'] = 'null';
+        $payload['compare_operation'] = 'null';
+        $payload['compare_value'] = -1;
+       return $this->repository->create($payload);
+    }
+
+
+    public function newBadgeMetricQuery ($payload)
+    {
+        return $this->repository->create($payload);
+    }
+
+
 }

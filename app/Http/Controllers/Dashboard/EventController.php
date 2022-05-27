@@ -8,7 +8,9 @@ use App\Models\Event;
 use App\Models\EventUser;
 use App\Models\Metric\BadgeCondition;
 use App\Services\BadgeConditionService;
+use App\Services\BadgeService;
 use App\Services\EventService;
+use App\Services\MetricService;
 use App\Services\PointRuleService;
 use Illuminate\Http\JsonResponse;
 
@@ -35,10 +37,10 @@ class EventController extends CrudController
      * @param   PointRuleService $service
      * @param   BadgeConditionService $badgeService
      */
-    public function eventEnd(Event $event, PointRuleService $service, BadgeConditionService $badgeService)
+    public function eventEnd(Event $event, PointRuleService $service, BadgeConditionService $badgeConditionService,BadgeService $badgeService,MetricService $metricService )
     {
         return
-            $this->eventService->eventEnd($event,$service,$badgeService);
+            $this->eventService->eventEnd($event,$service,$badgeConditionService,$badgeService,$metricService);
 
     }
 }

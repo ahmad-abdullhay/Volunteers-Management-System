@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\MetricQueryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\RoleController;
@@ -84,8 +85,21 @@ Route::prefix('dashboard')->group(function () {
         //
 
         Route::apiResource('metricQuery', \App\Http\Controllers\Dashboard\MetricQueryController::class);
-        //
+        // ahmad
+
+
+        Route::apiResource('metricConfiguration', \App\Http\Controllers\Dashboard\EventMetricConfigurationController::class);
+
+
         Route::apiResource('pointRule', \App\Http\Controllers\Dashboard\PointRuleController::class);
+        Route::post('newPointRule', [\App\Http\Controllers\Dashboard\PointRuleController::class, 'newPointRule']);
+
+        Route::post('newBadge', [BadgeController::class, 'newBadge']);
+        Route::get('getMetricsOperations', [MetricQueryController::class, 'getMetricsOperations']);
+
+        //
+        Route::get('getAllPointRules', [\App\Http\Controllers\Dashboard\PointRuleController::class, 'getAll']);
+        Route::get('getAllBadges', [BadgeController::class, 'getAll']);
 
 
         Route::get('event/end/{event}', [EventController::class, 'eventEnd']);

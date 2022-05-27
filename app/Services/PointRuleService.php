@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\Badge;
 use App\Models\Event;
+use App\Models\EventUser;
 use App\Models\Metric\BadgeCondition;
 use App\Models\Metric\MetricQuery;
 use App\Models\Metric\PointRule;
@@ -21,22 +23,37 @@ class PointRuleService extends BaseService
         $this->metricOperations = new MetricOperations();
         parent::__construct($repository);
     }
-    public function  apply (Event $event,PointRule $pointRule,MetricQuery $metricQuery){
+    public function getAll (){
+        //return Badge::with('badgeCondition','badgeCondition.metricQuery')->get();
 
-        $userList =   $event->with('users')->get()->first();
+        return PointRule::with('metricQuery')->get();
+    }
+    public function newPointRule ($payload,MetricQueryService $metricQueryService){
+        $query = $metricQueryService->newPointRuleMetricQuery($payload['metric_queries']);
+      return  $this->repository->newPointRule($payload,$query);
+    }
+
+    public function  apply (Event $event,PointRule $pointRule,MetricQuery $metricQuery,MetricService $metricService){
+        $userList =  EventUser::select('user_id',)
+            ->where('event_id', $event->id)
+            ->where('status', "1")->get();
+        //$userList =   $event->with('users')->get()->first();
 
      //   return $userList['users'];
-        foreach ($userList['users'] as &$user){
+        foreach ($userList as &$user){
             // get metrics list
-            $valuesList = [true,true,false];
-            $result =  $this->metricOperations->doOperation($metricQuery->first_operation,$valuesList);
+            $valuesList = $metricService->getOneEventMetric($metricQuery->metric_id,$user->user_id,$event->id);
+            if (empty($valuesList)){
+                continue;
+            }
+
+            $result =  $this->metricOperations->doOperation($metricQuery->first_operation,$valuesList[0]);
             $points = $result * $pointRule->points;
-            //return $result;
             $userPoint = new UserPoint;
             $userPoint->points = $points;
             $userPoint->notes = $pointRule->rule_name;
             $userPoint->operation = "add";
-            $userPoint->user_id = $user->id;
+            $userPoint->user_id = $user->user_id;
             $userPoint->save();
 
         }

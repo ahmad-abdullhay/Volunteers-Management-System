@@ -18,4 +18,11 @@ class BadgeConditionRepository extends BaseRepository implements BadgeConditionR
     {
         parent::__construct($model);
     }
+    public function newBadgeCondition ($badge_id,$metrics_query_id){
+        $badgeCondition = new BadgeCondition;
+        $badgeCondition->badge_id = $badge_id;
+        $badgeCondition->metrics_query_id = $metrics_query_id;
+        $badgeCondition->save();
+        return $badgeCondition;
+    }
 }

@@ -17,4 +17,12 @@ class PointRuleRepository extends BaseRepository implements PointRuleRepositoryI
     {
         parent::__construct($model);
     }
+    public function newPointRule (array $payload,$query){
+        $payload['metrics_query_id'] = $query->id;
+        unset($payload['metric_queries']);
+
+        return $this->create($payload);
+
+
+    }
 }

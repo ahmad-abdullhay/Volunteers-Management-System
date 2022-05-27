@@ -38,4 +38,13 @@ class MetricController extends BaseController
             $this->metricService->getEventUserMetricValues($params)
         );
     }
+
+    public function getEventUserInsertableMetrics(Request $request)
+    {
+        $params = $request->query();
+
+        return $this->handleSharedMessage(
+            $this->metricService->getEventUserInsertableMetrics($params)
+        );
+    }
 }

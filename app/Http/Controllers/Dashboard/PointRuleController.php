@@ -22,8 +22,20 @@ class PointRuleController extends CrudController
         // Call on parent constructor.
         parent::__construct($service, $request);
     }
+
+    /**
+     * Create a new instance form branch repository.
+     * @constructor
+     * @param PointRuleService $service
+     * @param PointRuleRequest $request
+     */
+    public function newPointRule (PointRuleService $service, PointRuleRequest $request,MetricQueryService $metricQueryService){
+       return $service->newPointRule($request->post(),$metricQueryService);
+
+    }
+
+    public function getAll (){
+       return $this->service->getAll();
+    }
 }
 
-{
-
-}
