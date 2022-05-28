@@ -25,14 +25,23 @@ class MetricService extends BaseService
         parent::__construct($repository);
     }
 
-    public function insertMetricValue(array $payload)
+    public function insertMetricValue(array $payload,EventMetricConfigurationService $configurationService)
     {
-        return new SharedMessage(__('success.store', ['model' => $this->modelName]),
-            $this->repository->insertMetricValue($payload),
-            true,
-            null,
-            200
-        );
+        $validation =   $configurationService->isValid($payload,$this);
+        if ($validation === true){
+            return new SharedMessage(__('success.store', ['model' => $this->modelName]),
+                $this->repository->insertMetricValue($payload),
+                true,
+                null,
+                200
+            );
+        } else {
+            return new SharedMessage(__($validation), [], false, 200
+           );
+        }
+
+
+
     }
 
     public function getEventMetrics($event)
