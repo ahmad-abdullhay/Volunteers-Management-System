@@ -6,12 +6,18 @@ use App\Common\SharedMessage;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\CrudController;
 use App\Http\Requests\Badge\AddBadgeUserRequest;
+use App\Http\Requests\Badge\BadgeRequest;
 use App\Http\Requests\EventRequest;
+use App\Http\Requests\PointRuleRequest;
+use App\Models\Metric\PointRule;
+use App\Services\BadgeConditionService;
 use App\Services\BadgeService;
 use App\Services\EventService;
+use App\Services\MetricQueryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use phpDocumentor\Reflection\Types\This;
 
 class BadgeController extends BaseController
 {
@@ -29,6 +35,17 @@ class BadgeController extends BaseController
 
     public function addBadgeUser(AddBadgeUserRequest $payload){
         return $this->handleSharedMessage($this->service->addBadgeToUser($payload->post()));
+    }
+
+    public function newBadge (BadgeRequest $request,MetricQueryService $metricQueryService,BadgeConditionService
+    $badgeConditionService){
+
+        $this->service->createBadge($request,$metricQueryService,$badgeConditionService);
+    }
+
+    public function getAll (){
+       return $this->service->getAll();
+
     }
 
     public function index(Request $request)

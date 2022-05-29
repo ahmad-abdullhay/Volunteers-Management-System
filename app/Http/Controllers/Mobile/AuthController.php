@@ -51,7 +51,7 @@ class AuthController extends BaseController
         $user = User::where('is_active', User::ACTIVE_STATUS)->where('phone', $payload)->first();
 
         //Todo:: Generate password generation and send it to the user via SMS.
-        $user->password = Hash::make('password');
+        $user->password = Hash::make('123123');
         $user->save();
 
         return $this->success(__('success.signup'), [],200);

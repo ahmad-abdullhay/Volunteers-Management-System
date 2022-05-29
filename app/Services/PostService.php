@@ -23,7 +23,8 @@ class PostService extends BaseService
             $this->repository->readAll(),
             true,
             null,
-            200
+            200,
+
         );
     }
 
