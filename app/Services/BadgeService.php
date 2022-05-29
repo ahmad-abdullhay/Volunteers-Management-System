@@ -48,9 +48,9 @@ class BadgeService extends BaseService
      return $badge != null;
 
     }
-    public function automaticallyGiveBadgeToUser($user_id, $badge_id, $note)
+    public function automaticallyGiveBadgeToUser($user_id, $badge_id,$event_id, $note)
     {
-        $this->repository->automaticallyGiveBadgeToUser($user_id,$badge_id,$note);
+        $this->repository->automaticallyGiveBadgeToUser($user_id,$badge_id,$event_id,$note);
 
     }
 

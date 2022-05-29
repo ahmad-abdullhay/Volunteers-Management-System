@@ -108,7 +108,7 @@ class MetricService extends BaseService
 
     public function pointRulesCheck($query,PointRuleService $pointRuleService, $event)
     {
-        $pointRule = PointRule::where('metric_query_id', $query->id)->first();
+        $pointRule = PointRule::where('metrics_query_id', $query->id)->first();
         if ($pointRule != null) {
             $pointRuleService->apply($event, $pointRule, $query, $this);
             return true;

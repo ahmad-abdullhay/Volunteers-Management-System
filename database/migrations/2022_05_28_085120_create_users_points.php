@@ -13,17 +13,20 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('badge_user', function (Blueprint $table) {
+        Schema::create('users_points', function (Blueprint $table) {
             $table->id();
-            $table->string("note");
+            $table->integer('points');
+            $table->string('notes');
+            $table->string('operation');
+            //     $table->string('');
             $table->foreignId('user_id')
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->foreignId('badge_id')
-                ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+            $table->foreignId('point_rule_id')->nullable()
+                ->constrained();
+            $table->foreignId('event_id')->nullable()
+                ->constrained();
             $table->timestamps();
         });
     }
@@ -35,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('volunteers_badges');
+        Schema::dropIfExists('users_points');
     }
 };

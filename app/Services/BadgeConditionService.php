@@ -58,14 +58,13 @@ class BadgeConditionService extends BaseService
                 }
                 // do compare
             if ($isTrue) {
-                $badgeService->automaticallyGiveBadgeToUser($user->user_id,$badge->id,$event->name);
+                $badgeService->automaticallyGiveBadgeToUser($user->user_id,$badge->id,$event->id,$event->name);
             }
             }
 
         }
 
     public function doOperations ($badgeCondition,$query,$metricService,$user,$event){
-      //  $query = MetricQuery::where('id', $badgeCondition->metric_query_id)->first();
         // if query for the last event only
         if ($query->second_operation == "null") {
            return $this->oneEventOperation($metricService,$query,$user,$event);

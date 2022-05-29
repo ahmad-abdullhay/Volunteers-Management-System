@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Mobile\EventUserRatingController;
+use App\Models\EventUserRating;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Mobile\AuthController;
 use App\Http\Controllers\Mobile\UserController;
@@ -37,6 +39,7 @@ Route::group(['middleware' => ['auth:sanctum', 'type.user']], function (){
     Route::get('metric/insertable-metrics-event-user', [MetricController::class, 'getEventUserInsertableMetrics']);
 
     //End Metric Routes.
+    Route::get('event/getEventEndReport/{event}', [EventController::class, 'getEventEndReport']);
 
     //Start Event Routes.
     //Get only pending users that want to join the event.
@@ -47,6 +50,7 @@ Route::group(['middleware' => ['auth:sanctum', 'type.user']], function (){
 
     Route::get('events', [EventController::class, 'index']);
 
+    Route::post('rateEvent', [EventUserRatingController::class,'rateEvent']);
 
 
 

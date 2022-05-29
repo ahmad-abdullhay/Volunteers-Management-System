@@ -50,6 +50,8 @@ class PointRuleService extends BaseService
             $result =  $this->metricOperations->doOperation($metricQuery->first_operation,$valuesList[0]);
             $points = $result * $pointRule->points;
             $userPoint = new UserPoint;
+            $userPoint->event_id = $event->id;
+            $userPoint->point_rule_id = $pointRule->id;
             $userPoint->points = $points;
             $userPoint->notes = $pointRule->rule_name;
             $userPoint->operation = "add";

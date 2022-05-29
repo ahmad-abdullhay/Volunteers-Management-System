@@ -77,6 +77,9 @@ class MetricRepository extends BaseRepository implements MetricRepositoryInterfa
             return ["hide"];
         $eventId = $params['event_id'];
         $event = Event::where('id',$eventId)->first();
+        if ($event->status != 1){
+            return [];
+        }
         $metricsList = [];
         foreach ($event->metrics as &$metric) {
            if ($metric->isList($metric->type)){
