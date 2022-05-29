@@ -59,4 +59,8 @@ class EventController extends BaseController
             $this->eventService->getEventUsers($event, EventUser::PENDING_STATUS)
         );
     }
+    public function getEventEndReport ( Event $event)
+    {
+     return    $this->eventService->getEventEndReport($event);
+    }
 }
