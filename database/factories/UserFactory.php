@@ -20,7 +20,6 @@ class UserFactory extends Factory
     {
         return [
             'name'                  => $this->faker->name(),
-            'username'              => $this->faker->userName(),
             'email'                 => $this->faker->unique()->safeEmail(),
             'volunteering_history'  => $this->faker->paragraph,
             'date_of_birth'         => $this->faker->date,
