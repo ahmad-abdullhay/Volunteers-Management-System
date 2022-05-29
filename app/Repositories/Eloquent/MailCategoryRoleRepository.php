@@ -3,27 +3,23 @@
 namespace App\Repositories\Eloquent;
 
 use App\Models\Message\Mail;
+use App\Models\Message\MailCategoriesRoles;
+use App\Models\Message\MailCategory;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-class MailRepository extends BaseRepository
+class MailCategoryRoleRepository extends BaseRepository
 {
     /**
      * BaseRepository constructor.
      *
-     * @param Mail $model
+     * @param MailCategoriesRoles $model
      */
     public function __construct(Mail $model)
     {
         parent::__construct($model);
     }
 
-    public function attachUsersToMail($mail, $users)
-    {
-
-        $mail->users()->attach($users);
-        $mail->save();
-    }
 
 }

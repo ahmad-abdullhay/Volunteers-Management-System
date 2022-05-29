@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Message;
 
 
 
+use App\Http\Requests\MainRequest;
 use App\Models\User;
 use Illuminate\Validation\Rule;
 
@@ -36,7 +37,12 @@ class MailRequest extends MainRequest
                 return [
                     'title'                          => 'required|string',
                     'text'                   => 'required|string',
-                    'mail_category_id' => [Rule::exists('mail_categories', 'id')]
+                    'mail_category_id' => [Rule::exists('mail_categories', 'id')],
+                    'users'                         => 'array',
+                    'users.*'                       => [
+                        Rule::exists('users', 'id')
+                            ->where('is_active', User::ACTIVE_STATUS),
+                    ],
                 ];
             default:break;
         }

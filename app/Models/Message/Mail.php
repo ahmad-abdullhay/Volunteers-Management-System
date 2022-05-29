@@ -4,12 +4,15 @@ namespace App\Models\Message;
 
 use App\Models\Admin;
 use App\Models\BaseModel;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class Mail extends BaseModel
 {
 
-    protected $table = 'mail';
+
+
+    protected $table = 'mails';
 
     public string|null $relatedToCurrentUser = 'admin_id';
 
@@ -26,6 +29,11 @@ class Mail extends BaseModel
     public function category()
     {
         return $this->belongsTo(MailCategory::class, 'mail_category_id');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
     }
 //    protected array $manyToManyRelations = ['metrics', 'categories'];
 

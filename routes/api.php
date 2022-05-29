@@ -20,7 +20,7 @@ use App\Http\Controllers\Dashboard\UserCrudController;
 use App\Http\Controllers\Dashboard\Admin\AdminCrudController;
 use App\Http\Controllers\Dashboard\Message\MailCategoryController;
 use App\Http\Controllers\Dashboard\Message\MailController;
-
+use App\Http\Controllers\Dashboard\Message\MailCategoryRoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +43,6 @@ Route::group(['prefix' => 'mobile'], function () {
 
 
 });
-
 
 Route::prefix('dashboard')->group(function () {
 
@@ -92,9 +91,15 @@ Route::prefix('dashboard')->group(function () {
         Route::resource('mail-categories', MailCategoryController::class);
         Route::resource('mail', MailController::class);
 
+        Route::resource('mail-categories-role', MailCategoryRoleController::class);
 
         Route::apiResource('users', UserCrudController::class);
         Route::apiResource('admins', AdminCrudController::class);
+
+        Route::get("search-by-name/{key}",[UserController::class,"searchByName"]);
+
+        Route::get("admin/mail-category",[AdminCrudController::class,"getMailCategories"]);
+
 
 
     });

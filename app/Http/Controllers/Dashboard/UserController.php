@@ -25,4 +25,11 @@ class UserController extends BaseController
     {
         return $this->handleSharedMessage($this->service->activateVolunteer($user));
     }
+
+    public function searchByName($key){
+        return $this->handleSharedMessage($this->service->searchByName($key));
+    }
+
+
+
 }

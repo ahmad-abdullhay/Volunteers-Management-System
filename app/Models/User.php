@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Models\Message\Mail;
 use App\Services\BadgeService;
 
 use App\Filters\User\StatusFilter;
@@ -32,6 +33,8 @@ class User extends BaseModel implements
 
     const ACTIVE_STATUS = 1;
     const INACTIVE_STATUS = 0;
+
+
 
     protected $guarded = [];
 
@@ -72,5 +75,10 @@ class User extends BaseModel implements
     public function badges()
     {
         return $this->belongsToMany(Badge::class);
+    }
+
+    public function mails()
+    {
+        return $this->belongsToMany(Mail::class);
     }
 }

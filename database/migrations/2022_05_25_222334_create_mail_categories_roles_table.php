@@ -13,16 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('mail', function (Blueprint $table) {
+        Schema::create('mail_categories_roles', function (Blueprint $table) {
             $table->id();
-            $table->string("title");
-            $table->string("text");
-
-            $table->foreignId('admin_id')
+            $table->string("type");
+            $table->foreignId('role_id')
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-
             $table->foreignId('mail_category_id')
                 ->constrained()
                 ->onUpdate('cascade')
@@ -38,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mail');
+        Schema::dropIfExists('mail_categories_roles_tabel');
     }
 };

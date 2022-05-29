@@ -21,4 +21,10 @@ class AdminCrudController extends CrudController
     {
         parent::__construct($service, $request);
     }
+
+
+    public function getMailCategories(){
+        return $this->service->getMailCategories();
+    }
+
 }

@@ -57,4 +57,15 @@ class UserService extends BaseService
         );
     }
 
+    public function searchByName($key)
+    {
+        return new SharedMessage(__('success.join-status-update'),
+            $this->repository->searchByName($key),
+            true,
+            null,
+            200
+        );
+    }
+
+
 }

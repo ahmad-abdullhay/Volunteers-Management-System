@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Message;
 
 
+
+use App\Http\Requests\MainRequest;
 
 class MailCategoryRequest extends MainRequest
 {

@@ -33,9 +33,14 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
     public function joinEvent($payload)
     {
+
         return EventUser::create([
             'user_id' => auth()->id(),
             'event_id' => $payload['event_id']
         ]);
+    }
+
+    public function searchByName($keyWord){
+       return  User::query()->where("name","LIKE","%{$keyWord}%")->get();
     }
 }
