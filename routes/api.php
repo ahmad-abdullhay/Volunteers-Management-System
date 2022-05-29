@@ -11,6 +11,7 @@ use App\Http\Controllers\Dashboard\MetricController;
 use App\Http\Controllers\Dashboard\PostController;
 
 
+use App\Http\Controllers\MediaController;
 
 use App\Http\Controllers\Dashboard\Badge\BadgeController;
 use App\Http\Controllers\Dashboard\Badge\BadgeCRUDController;
@@ -47,7 +48,6 @@ Route::prefix('dashboard')->group(function () {
 
     //Admin Login Route.
     Route::post('/login', [AuthController::class, 'login']);
-
 
     Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function(){
 
@@ -94,6 +94,16 @@ Route::prefix('dashboard')->group(function () {
     });
 
 });
+
+// Start -- Media Apis --.
+
+//Upload Single or Multiple Media files.
+Route::post('/upload-media', [MediaController::class, 'uploadMedia']);
+
+//Delete Media File.
+Route::delete('/delete-media/{id}', [MediaController::class, 'deleteMedia']);
+
+// End -- Media Apis --.
 
 
 
