@@ -14,7 +14,7 @@ class Event extends BaseModel implements HasMedia
 
     protected $guarded = [];
 
-    protected $with = ['media', 'categories', 'users'];
+    protected $with = ['media', 'categories', 'users', 'media'];
 
     protected $appends = ['isSuperVisor', 'joinRequestStatus'];
 
