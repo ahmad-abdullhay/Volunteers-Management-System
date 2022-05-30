@@ -54,7 +54,7 @@ class BadgeConditionService extends BaseService
                 $query = MetricQuery::where('id', $badgeCondition->metrics_query_id)->first();
                 $finalResult =  $this->doOperations($badgeCondition,$query,$metricService,$user,$event);
                 $isTrue =
-                    $this->metricOperations->doCompare($query->compare_operation, $finalResult, $badgeCondition->compare_value);
+                    $this->metricOperations->doCompare($query->compare_operation, $finalResult, $query->compare_value);
                 }
                 // do compare
             if ($isTrue) {
@@ -93,6 +93,11 @@ class BadgeConditionService extends BaseService
         }
         // do second operation for outer array (results array)
         $finalResult = $this->metricOperations->doOperation($query->second_operation, $resultList);
+        $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+        $myJSON=json_encode($resultList);
+        fwrite($myfile, $finalResult);
+        fwrite($myfile, $myJSON);
+        fclose($myfile);
         return $finalResult;
     }
 

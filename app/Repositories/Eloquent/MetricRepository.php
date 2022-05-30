@@ -59,7 +59,7 @@ class MetricRepository extends BaseRepository implements MetricRepositoryInterfa
             $data = [
                 "metric" => $metric,
                 "values" => $valuesAndDates[0],
-                "dates" => $valuesAndDates[1][0],
+                "dates" => $valuesAndDates[1][0] ?? null,
 
 
             ];
@@ -78,7 +78,7 @@ class MetricRepository extends BaseRepository implements MetricRepositoryInterfa
         $eventId = $params['event_id'];
         $event = Event::where('id',$eventId)->first();
         if ($event->status != 1){
-            return [];
+         //   return [];
         }
         $metricsList = [];
         foreach ($event->metrics as &$metric) {

@@ -136,15 +136,21 @@ class MetricService extends BaseService
         $metric = Metric::where('id', $metricId)->first();
         $metricType = $metric->type;
         $className = config('metric.' . $metricType);
+        $eventsId = Event::where ('status',2)->pluck('id')->toArray();;
 
         $metrics = MetricEventValue::select('event_id', 'metric_value_type_id', 'valuable_type')
+            ->whereIn("event_id",$eventsId)
             ->where('valuable_type', $className)
             ->where('user_id', $userId)
             ->where('metric_id', $metricId)
             ->orderBy('event_id')
             ->get()
             ->groupBy(['event_id']);
-
+        $myfile = fopen("more.txt", "w") or die("Unable to open file!");
+        $myJSON=json_encode($metrics);
+        // fwrite($myfile, $compareValue);
+        fwrite($myfile, $myJSON);
+        fclose($myfile);
         $metricsArray = [];
 
         foreach ($metrics as $key => $values) {

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Models\Metric\UserPoint;
 use App\Services\BadgeService;
 
 use App\Filters\User\StatusFilter;
@@ -58,7 +59,6 @@ class User extends BaseModel implements
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
     public function joinRequest()
     {
         return $this->hasOne(JoinRequest::class, 'user_id');
@@ -73,4 +73,5 @@ class User extends BaseModel implements
     {
         return $this->belongsToMany(Badge::class);
     }
+
 }

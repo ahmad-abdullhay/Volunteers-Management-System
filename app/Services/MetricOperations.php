@@ -29,6 +29,11 @@ class MetricOperations
 
     public function more($compareValue,$value)
     {
+//        $myfile = fopen("more.txt", "w") or die("Unable to open file!");
+//        $myJSON=json_encode($value);
+//        fwrite($myfile, $compareValue);
+//        fwrite($myfile, $myJSON);
+    //    fclose($myfile);
         return $compareValue > $value;
     }
 
