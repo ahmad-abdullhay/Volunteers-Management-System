@@ -10,6 +10,7 @@ use App\Http\Controllers\Mobile\EventController;
 
 use App\Http\Controllers\Dashboard\PostController;
 use App\Http\Controllers\Dashboard\Badge\BadgeController;
+use App\Http\Controllers\Mobile\NotificationController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/sign-up', [AuthController::class, 'signUp']);
@@ -60,5 +61,14 @@ Route::group(['middleware' => ['auth:sanctum', 'type.user']], function (){
     Route::get('badges', [BadgeController::class, 'index']);
 
 
+    // -- Start Notifications --
 
+    Route::get('notifications', [NotificationController::class, 'index']);
+
+    Route::put('notifications', [NotificationController::class, 'readNotifications']);
+
+    Route::delete('notifications/{id}', [NotificationController::class, 'deleteNotification']);
+
+
+    // -- End Notifications --
 });

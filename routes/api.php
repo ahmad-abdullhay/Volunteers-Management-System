@@ -21,6 +21,9 @@ use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\UserCrudController;
 use App\Http\Controllers\Dashboard\Admin\AdminCrudController;
 
+use App\Http\Controllers\Dashboard\Notification\NotificationCrudController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -70,7 +73,7 @@ Route::prefix('dashboard')->group(function () {
         Route::resource('join-requests', JoinRequestController::class);
         Route::resource('events', EventController::class);
 
-
+        Route::apiResource('notifications', NotificationCrudController::class);
 
         //StartMetric Routes.
 
@@ -81,12 +84,8 @@ Route::prefix('dashboard')->group(function () {
 
         //End Metric Routes.
 
-
-        //
-
         Route::apiResource('metricQuery', \App\Http\Controllers\Dashboard\MetricQueryController::class);
         // ahmad
-
 
         Route::apiResource('metricConfiguration', \App\Http\Controllers\Dashboard\EventMetricConfigurationController::class);
 

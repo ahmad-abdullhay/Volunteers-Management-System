@@ -58,6 +58,30 @@ class EventService extends BaseService
         return parent::store($payload);
     }
 
+    public function update(int $id, array $payload): SharedMessage
+    {
+        if (isset($payload['users'])) {
+
+            $users = $payload['users'];
+
+            unset($payload['users']);
+        }
+        $event = $this->repository->update($id, $payload);
+        $event->supervisors()->detach();
+        $this->repository->attachUsersToEvent(
+            $event,
+            $users,
+            EventUser::SUPERVISOR,
+            EventUser::ACCEPTED_STATUS
+        );
+        return new SharedMessage(__('success.update', ['model' => $this->modelName]),
+            $event,
+            true,
+            null,
+            200
+        );
+    }
+
     /**
      * @param Event $event
      * @return SharedMessage

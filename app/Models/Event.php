@@ -30,6 +30,15 @@ class Event extends BaseModel implements HasMedia
         return $this->belongsToMany(User::class);
     }
 
+    public function acceptedUsers()
+    {
+        return $this->belongsToMany(User::class)->where('status', EventUser::ACCEPTED_STATUS);
+    }
+
+    public function supervisors()
+    {
+        return $this->belongsToMany(User::class)->where('status', EventUser::ACCEPTED_STATUS)->where('is_supervisor', EventUser::SUPERVISOR);
+    }
     public function metrics()
     {
         return $this->belongsToMany(Metric::class);

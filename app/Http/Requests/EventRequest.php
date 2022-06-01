@@ -37,7 +37,7 @@ class EventRequest extends MainRequest
                     'start_date'                    => 'required|date',
                     'required_volunteers_number'    => 'required|integer',
                     'end_date'                      => 'required|date|after:start_date',
-                    'users'                         => 'array',
+                    'users'                         => 'required|array',
                     'users.*'                       => [
                         Rule::exists('users', 'id')
                             ->where('is_active', User::ACTIVE_STATUS),
