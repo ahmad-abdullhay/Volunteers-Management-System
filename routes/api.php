@@ -12,6 +12,7 @@ use App\Http\Controllers\Dashboard\MetricController;
 use App\Http\Controllers\Dashboard\PostController;
 
 
+use App\Http\Controllers\MediaController;
 
 use App\Http\Controllers\Dashboard\Badge\BadgeController;
 use App\Http\Controllers\Dashboard\Badge\BadgeCRUDController;
@@ -19,6 +20,9 @@ use App\Http\Controllers\Dashboard\Badge\BadgeCRUDController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\UserCrudController;
 use App\Http\Controllers\Dashboard\Admin\AdminCrudController;
+
+use App\Http\Controllers\Dashboard\Notification\NotificationCrudController;
+
 
 
 /*
@@ -49,7 +53,6 @@ Route::prefix('dashboard')->group(function () {
     //Admin Login Route.
     Route::post('/login', [AuthController::class, 'login']);
 
-
     Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function(){
 
         Route::get('me', [AuthController::class, 'me']);
@@ -70,7 +73,7 @@ Route::prefix('dashboard')->group(function () {
         Route::resource('join-requests', JoinRequestController::class);
         Route::resource('events', EventController::class);
 
-
+        Route::apiResource('notifications', NotificationCrudController::class);
 
         //StartMetric Routes.
 
@@ -81,12 +84,8 @@ Route::prefix('dashboard')->group(function () {
 
         //End Metric Routes.
 
-
-        //
-
         Route::apiResource('metricQuery', \App\Http\Controllers\Dashboard\MetricQueryController::class);
         // ahmad
-
 
         Route::apiResource('metricConfiguration', \App\Http\Controllers\Dashboard\EventMetricConfigurationController::class);
 
@@ -120,6 +119,16 @@ Route::prefix('dashboard')->group(function () {
     });
 
 });
+
+// Start -- Media Apis --.
+
+//Upload Single or Multiple Media files.
+Route::post('/upload-media', [MediaController::class, 'uploadMedia']);
+
+//Delete Media File.
+Route::delete('/delete-media/{id}', [MediaController::class, 'deleteMedia']);
+
+// End -- Media Apis --.
 
 
 

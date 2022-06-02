@@ -5,10 +5,11 @@ namespace App\Filters\Event;
 use App\Filters\Interfaces\Filter;
 use App\Models\EventUser;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class VolunteerFilter implements Filter
 {
-    public string $column = "user_id";
+    public string $column = "myEvents";
 
     /**
      * Apply a given search value to the builder instance.
@@ -22,9 +23,14 @@ class VolunteerFilter implements Filter
 
         if ($value !== null){
             //Apply suitable filter for this value.
-            $builder->whereHas('users', function ($query) use ($value){
-               $query->where('user_id', $value)->where('status', EventUser::ACCEPTED_STATUS);
-            });
+            if ($value == "true")
+                $builder->whereHas('users', function ($query){
+                   $query->where('user_id', Auth::id())->where('status', EventUser::ACCEPTED_STATUS);
+                });
+            else if ($value == "false")
+                $builder->whereHas('users', function ($query){
+                    $query->where('user_id', Auth::id())->where('status', '!=', EventUser::ACCEPTED_STATUS);
+                });
         }
     }
 }
