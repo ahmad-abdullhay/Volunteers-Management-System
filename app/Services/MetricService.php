@@ -168,6 +168,9 @@ class MetricService extends BaseService
     {
 
         $metric = Metric::where('id', $metricId)->first();
+        if ($metric->class != null){
+            return $this->getOneEventPreDefinedMetric($metric,$userId, $eventId);
+        }
         $metricType = $metric->type;
         $className = config('metric.' . $metricType);
         $metrics = MetricEventValue::select('event_id', 'metric_value_type_id', 'valuable_type')
@@ -189,7 +192,41 @@ class MetricService extends BaseService
         }
         return $metricsArray;
     }
-
+    public function getOneEventPreDefinedMetric ($metric, $userId, $eventId)
+    {
+        $model = app(ucfirst($metric->class));
+         $values = $model->where('user_id',$userId)->where('event_id',$eventId)->get();
+        $eventValues = [];
+        foreach ($values as $value){
+            if ($value->getValue() !== null)
+                array_push($eventValues, $value->getValue());
+        }
+//        $myfile = fopen("more.txt", "w") or die("Unable to open file!");
+//        $myJSON=json_encode($eventValues);
+//        //     fwrite($myfile, '$compareValue');
+//        fwrite($myfile, $myJSON);
+//        fclose($myfile);
+         return [$eventValues];
+    }
+    public function getAllPreDefinedMetric ($metric, $userId)
+    {
+        $metric = Metric::where('id', $metric)->first();
+        $model = app(ucfirst($metric->class));
+        $eventsId = Event::where ('status',2)->pluck('id')->toArray();;
+        $events = $model->whereIn("event_id",$eventsId)->where('user_id',$userId)->get()->groupBy(['event_id']);
+    //    return $events;
+        $arrays = [];
+        foreach ($events as &$event ) {
+            $eventValues = [];
+            foreach ($event as $value){
+                if ($value->getValue() !== null)
+                    array_push($eventValues, $value->getValue());
+            }
+            if (count($eventValues) > 0)
+            array_push($arrays,$eventValues);
+        }
+        return $arrays;
+    }
     public function getOneEventMetricWithDate($metricId, $userId, $eventId)
     {
 

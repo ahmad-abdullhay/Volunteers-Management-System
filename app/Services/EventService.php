@@ -81,12 +81,12 @@ class EventService extends BaseService
     public function getEventEndReport(Event $event)
     {
            $userId = Auth::id();
-//        if ($event->status != 3){
-//            $hasRate = EventUserRating::where('event_id', $event->id)->where('user_id', $userId)->get()->count();
-//            return [
-//                'no_report' => false,
-//                'couldRate' => $hasRate < 1];
-//        }
+        if ($event->status == 2){
+            $hasRate = EventUserRating::where('event_id', $event->id)->where('user_id', $userId)->get()->count();
+            return [
+                'no_report' => false,
+                'couldRate' => $hasRate < 1];
+        }
 
      //   $userId = 5;
         $userPoints = UserPoint::where('event_id', $event->id)->where('user_id', $userId)->get();

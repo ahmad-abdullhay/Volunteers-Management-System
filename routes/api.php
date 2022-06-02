@@ -104,7 +104,7 @@ Route::prefix('dashboard')->group(function () {
 
         Route::get('event/end/{event}', [EventController::class, 'eventEnd']);
 
-
+        Route::get('test', [RoleController::class, 'test']);
 
 
         Route::patch('activate-volunteer/{user}', [UserController::class, 'activateVolunteer']);

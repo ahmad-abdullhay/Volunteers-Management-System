@@ -29,11 +29,7 @@ class MetricOperations
 
     public function more($compareValue,$value)
     {
-//        $myfile = fopen("more.txt", "w") or die("Unable to open file!");
-//        $myJSON=json_encode($value);
-//        fwrite($myfile, $compareValue);
-//        fwrite($myfile, $myJSON);
-    //    fclose($myfile);
+
         return $compareValue > $value;
     }
 
@@ -43,6 +39,7 @@ class MetricOperations
     }
     public function isTrue($compareValue)
     {
+
         return $compareValue == 1;
     }
     public function isFalse($compareValue)
@@ -100,10 +97,12 @@ class MetricOperations
     }
     public function allTrue($valueList)
     {
+
         foreach ($valueList as &$value){
-            if ($value == 0)
+            if ($value === 0)
                 return false;
         }
+
         return true;
     }
 
@@ -132,9 +131,10 @@ class MetricOperations
         return $counter;
     }
     public function mostTrue ($valueList){
-          return  $this->trueCount($valueList) > $this->countArray($valueList);
+
+          return  $this->trueCount($valueList) > ($this->countArray($valueList)/2);
     }
     public function mostFalse ($valueList){
-        return  $this->falseCount($valueList) > $this->countArray($valueList);
+        return  $this->falseCount($valueList) > ($this->countArray($valueList)/2);
     }
 }
