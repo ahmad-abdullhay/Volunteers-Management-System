@@ -23,12 +23,6 @@ class EventController extends BaseController
     {
         $filters = $request->query();
 
-        if (isset($filters['myEvents'])){
-
-            $filters['user_id'] = Auth::id();
-            unset($filters['myEvents']);
-        }
-
         return $this->handleSharedMessage(
             $this->eventService->index(
                 ['*'],

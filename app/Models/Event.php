@@ -12,9 +12,17 @@ class Event extends BaseModel implements HasMedia
 {
     use InteractsWithMedia;
 
+    const ESTABLISHING_STATUS = 0;
+    const RECRUITING_STATUS = 1;
+    const IN_PROGRESS_STATUS = 2;
+    const ENDING_STATUS = 3;
+    const ARCHIVED_STATUS = 4;
+    const PAUSED_STATUS = 5;
+    const ABORTED_STATUS = 6;
+
     protected $guarded = [];
 
-    protected $with = ['media', 'categories', 'users', 'media'];
+    protected $with = ['media', 'categories', 'users'];
 
     protected $appends = ['isSuperVisor', 'joinRequestStatus'];
 
