@@ -20,7 +20,10 @@ class PostController extends CrudController
     }
 
     public function readAll(){
-        return $this->handleSharedMessage($this->service->readAll());
+        return $this->handleSharedMessage($this->service->readAll()
+
+
+        );
     }
 
     public function readOne($id){

@@ -33,7 +33,6 @@ class JoinRequestRequest extends MainRequest
             case 'POST':
                 return [
                     'name'                  => 'required',
-                    'username'              => 'required|unique:users,username',
                     'email'                 => 'required|email|unique:users,email',
                     'date_of_birth'         => 'required',
                     'phone'                 => 'required|unique:users,phone',
@@ -44,8 +43,14 @@ class JoinRequestRequest extends MainRequest
                 ];
             case 'PUT':
                 return [
-                    'name' => 'required|unique:users,name'.$user,
-                    'permissions.*' => 'exists:permissions,id'
+                    'name'                  => 'required',
+                    'email'                 => 'required|email|unique:users,email,'. $user,
+                    'date_of_birth'         => 'required',
+                    'phone'                 => 'required|unique:users,phone,' . $user,
+                    'gender'                => 'required|integer|between:1,2',
+                    'location'              => 'required|string',
+                    'job'                   => 'required|string',
+                    'volunteering_history'  => 'string'
                 ];
             default:break;
         }

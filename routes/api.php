@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\MetricQueryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\RoleController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Dashboard\MetricController;
 use App\Http\Controllers\Dashboard\PostController;
 
 
+use App\Http\Controllers\MediaController;
 
 use App\Http\Controllers\Dashboard\Badge\BadgeController;
 use App\Http\Controllers\Dashboard\Badge\BadgeCRUDController;
@@ -18,9 +20,15 @@ use App\Http\Controllers\Dashboard\Badge\BadgeCRUDController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\UserCrudController;
 use App\Http\Controllers\Dashboard\Admin\AdminCrudController;
+
 use App\Http\Controllers\Dashboard\Message\MailCategoryController;
 use App\Http\Controllers\Dashboard\Message\MailController;
 use App\Http\Controllers\Dashboard\Message\MailCategoryRoleController;
+
+
+use App\Http\Controllers\Dashboard\Notification\NotificationCrudController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -53,7 +61,6 @@ Route::prefix('dashboard')->group(function () {
     //Admin Login Route.
     Route::post('/login', [AuthController::class, 'login']);
 
-
     Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function(){
 
 
@@ -77,7 +84,7 @@ Route::prefix('dashboard')->group(function () {
         Route::resource('join-requests', JoinRequestController::class);
         Route::resource('events', EventController::class);
 
-
+        Route::apiResource('notifications', NotificationCrudController::class);
 
         //StartMetric Routes.
 
@@ -87,6 +94,27 @@ Route::prefix('dashboard')->group(function () {
         Route::apiResource('categories', CategoryController::class);
 
         //End Metric Routes.
+
+        Route::apiResource('metricQuery', \App\Http\Controllers\Dashboard\MetricQueryController::class);
+        // ahmad
+
+        Route::apiResource('metricConfiguration', \App\Http\Controllers\Dashboard\EventMetricConfigurationController::class);
+
+
+        Route::apiResource('pointRule', \App\Http\Controllers\Dashboard\PointRuleController::class);
+        Route::post('newPointRule', [\App\Http\Controllers\Dashboard\PointRuleController::class, 'newPointRule']);
+
+        Route::post('newBadge', [BadgeController::class, 'newBadge']);
+        Route::get('getMetricsOperations', [MetricQueryController::class, 'getMetricsOperations']);
+
+        //
+        Route::get('getAllPointRules', [\App\Http\Controllers\Dashboard\PointRuleController::class, 'getAll']);
+        Route::get('getAllBadges', [BadgeController::class, 'getAll']);
+
+
+        Route::get('event/end/{event}', [EventController::class, 'eventEnd']);
+
+
 
 
         Route::patch('activate-volunteer/{user}', [UserController::class, 'activateVolunteer']);
@@ -116,6 +144,16 @@ Route::prefix('dashboard')->group(function () {
     });
 
 });
+
+// Start -- Media Apis --.
+
+//Upload Single or Multiple Media files.
+Route::post('/upload-media', [MediaController::class, 'uploadMedia']);
+
+//Delete Media File.
+Route::delete('/delete-media/{id}', [MediaController::class, 'deleteMedia']);
+
+// End -- Media Apis --.
 
 
 

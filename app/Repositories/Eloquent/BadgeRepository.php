@@ -20,4 +20,17 @@ class BadgeRepository extends BaseRepository
     public function addBadgeToUser(array $payload){
         return BadgeUser::create($payload);
     }
+    public function getUserBadge ($user_id,$badge_id)
+    {
+        return BadgeUser::where('badge_id', $badge_id)->where('user_id',$user_id)->first();
+    }
+    public function automaticallyGiveBadgeToUser($user_id,$badge_id,$event_id,$note){
+        $badgeUser = new BadgeUser;
+        $badgeUser->badge_id = $badge_id;
+        $badgeUser->note = $note;
+        $badgeUser->user_id = $user_id;
+        $badgeUser->event_id = $event_id;
+        $badgeUser->save();
+
+    }
 }
