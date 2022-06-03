@@ -13,22 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('mails', function (Blueprint $table) {
+        Schema::create('admin_mail', function (Blueprint $table) {
             $table->id();
-            $table->string("title");
-            $table->string("text");
+            $table->boolean("is_read")->default(false);
 
-            $table->foreignId('admin_id')->nullable()
+            $table->foreignId('admin_id')
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
-            $table->foreignId('user_id')->nullable()
-                ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-
-            $table->foreignId('mail_category_id')
+            $table->foreignId('mail_id')
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
@@ -43,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mail');
+        Schema::dropIfExists('admin_mail');
     }
 };

@@ -5,6 +5,7 @@ namespace App\Http\Requests\Message;
 
 
 use App\Http\Requests\MainRequest;
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Validation\Rule;
 
@@ -42,6 +43,11 @@ class MailRequest extends MainRequest
                     'users.*'                       => [
                         Rule::exists('users', 'id')
                             ->where('is_active', User::ACTIVE_STATUS),
+                    ],
+                    'admins'                         => 'array',
+                    'admins.*'                       => [
+                        Rule::exists('admins', 'id')
+//                            ->where('is_active', Admin::ACTIVE_STATUS),
                     ],
                 ];
             default:break;

@@ -37,6 +37,10 @@ use App\Http\Controllers\Dashboard\Message\MailCategoryRoleController;
 //
 //});
 
+Route::group(['middleware' => ['auth:sanctum']], function() {
+    Route::get('mail-categories/get-user-by-category-id/{category_id}', [MailCategoryController::class,'getUserFromRoleInCategory']);
+
+});
 
 Route::group(['prefix' => 'mobile'], function () {
     require_once base_path('routes/mobile.php');
@@ -51,6 +55,9 @@ Route::prefix('dashboard')->group(function () {
 
 
     Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function(){
+
+
+        Route::get('mail/unread-count/{category_id}', [MailController::class,"AdminMessageUnread"]);
 
         Route::get('me', [AuthController::class, 'me']);
 
@@ -89,7 +96,11 @@ Route::prefix('dashboard')->group(function () {
         Route::post('badge/add-to-user', [BadgeController::class,'addBadgeUser']);
 
         Route::resource('mail-categories', MailCategoryController::class);
+
+
         Route::resource('mail', MailController::class);
+        Route::get('mail/get-by-category/{category_id}', [MailController::class,"getByAdminIdWithCategoryId"]);
+
 
         Route::resource('mail-categories-role', MailCategoryRoleController::class);
 

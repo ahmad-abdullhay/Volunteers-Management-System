@@ -4,6 +4,7 @@ namespace App\Models\Message;
 
 use App\Models\Admin;
 use App\Models\BaseModel;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,15 +13,15 @@ class MailCategoriesRoles extends BaseModel
 
 
 
-    protected $table = 'MailCategoriesRoles';
+    protected $table = 'mail_categories_roles';
 
 
     protected $guarded = [];
 
 
-    public function admin()
+    public function roles()
     {
-        return $this->belongsTo(Admin::class, 'role_id');
+        return $this->belongsTo(Role::class, 'role_id');
     }
 
     public function category()

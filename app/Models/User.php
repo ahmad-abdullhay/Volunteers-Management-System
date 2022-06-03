@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends BaseModel implements
     AuthenticatableContract,
@@ -29,12 +30,14 @@ class User extends BaseModel implements
         Authenticatable,
         Authorizable,
         CanResetPassword,
-        MustVerifyEmail;
+        MustVerifyEmail,HasRoles;
 
     const ACTIVE_STATUS = 1;
     const INACTIVE_STATUS = 0;
 
+    protected $with = ['roles'];
 
+    protected $guard_name = 'users';
 
     protected $guarded = [];
 

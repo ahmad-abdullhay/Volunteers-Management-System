@@ -14,7 +14,7 @@ class Mail extends BaseModel
 
     protected $table = 'mails';
 
-    public string|null $relatedToCurrentUser = 'admin_id';
+//    public string|null $relatedToCurrentUser = 'admin_id' | 'user_id';
 
 
 
@@ -26,6 +26,11 @@ class Mail extends BaseModel
         return $this->belongsTo(Admin::class, 'admin_id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function category()
     {
         return $this->belongsTo(MailCategory::class, 'mail_category_id');
@@ -35,6 +40,14 @@ class Mail extends BaseModel
     {
         return $this->belongsToMany(User::class);
     }
+    public function admins()
+    {
+        return $this->belongsToMany(Admin::class);
+    }
+
+
+
+
 //    protected array $manyToManyRelations = ['metrics', 'categories'];
 
 }

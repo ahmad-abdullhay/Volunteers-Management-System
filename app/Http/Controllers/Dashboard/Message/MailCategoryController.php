@@ -19,4 +19,7 @@ class MailCategoryController extends CrudController
         parent::__construct($service, $request);
     }
 
+    public function getUserFromRoleInCategory($category_id){
+        return $this->service->getUserFromRoleInCategory($category_id);
+    }
 }

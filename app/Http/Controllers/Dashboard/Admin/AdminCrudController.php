@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard\Admin;
 
 use App\Http\Controllers\CrudController;
 use App\Http\Requests\AdminRequest;
+use App\Models\User;
 use App\Services\Shared\BaseService;
 use App\Services\AdminService;
 
@@ -24,6 +25,7 @@ class AdminCrudController extends CrudController
 
 
     public function getMailCategories(){
+//        return User::query()->with("roles")->where("id","=",10)->get()->first();
         return $this->service->getMailCategories();
     }
 

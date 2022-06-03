@@ -30,6 +30,4 @@ class UserController extends BaseController
         return $this->handleSharedMessage($this->service->searchByName($key));
     }
 
-
-
 }
