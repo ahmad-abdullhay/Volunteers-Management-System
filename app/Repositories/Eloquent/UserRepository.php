@@ -21,7 +21,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function activateVolunteer(User $user)
     {
         $user->is_active = !$user->is_active;
+//        dd($user->is_active);
         $user->save();
+
         return $user->is_active;
     }
 

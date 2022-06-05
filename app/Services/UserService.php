@@ -29,6 +29,7 @@ class UserService extends BaseService
             $user->joinRequest->save();
         }
 
+
         return new SharedMessage(__('success.update', ['model' => $this->modelName]),
             true,
             true,
