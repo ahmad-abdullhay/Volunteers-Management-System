@@ -47,13 +47,22 @@ Route::group(['prefix' => 'mobile'], function () {
 
 });
 
+//Route::get('/validate-token', function ($request) {
+//    dd($request->bearerToken());
+//    return ['data' => 'Token is valid'];
+//});
+
 
 Route::prefix('dashboard')->group(function () {
 
     //Admin Login Route.
     Route::post('/login', [AuthController::class, 'login']);
 
+
     Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function(){
+
+        Route::get("check-token",[AdminCrudController::class,"CheckToken"]);
+
 
         Route::get('me', [AuthController::class, 'me']);
 
@@ -66,6 +75,7 @@ Route::prefix('dashboard')->group(function () {
         Route::get('posts/accept/{id}',[PostController ::class,'acceptPost']);
 
         Route::resource('posts',PostController ::class);
+
 
 
         Route::patch('join-requests/change-status/{id}', [JoinRequestController::class, 'changeRequestStatus']);
