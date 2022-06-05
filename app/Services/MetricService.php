@@ -53,6 +53,15 @@ class MetricService extends BaseService
             200
         );
     }
+    public function getEventMetricsWithConfiguration($event)
+    {
+        return new SharedMessage(__('success.store', ['model' => $this->modelName]),
+            $this->repository->getEventMetricsWithConfiguration($event),
+            true,
+            null,
+            200
+        );
+    }
 
     public function getEventUserMetricValues($params)
     {
@@ -146,11 +155,7 @@ class MetricService extends BaseService
             ->orderBy('event_id')
             ->get()
             ->groupBy(['event_id']);
-        $myfile = fopen("more.txt", "w") or die("Unable to open file!");
-        $myJSON=json_encode($metrics);
-        // fwrite($myfile, $compareValue);
-        fwrite($myfile, $myJSON);
-        fclose($myfile);
+
         $metricsArray = [];
 
         foreach ($metrics as $key => $values) {

@@ -3,6 +3,7 @@
 namespace App\Repositories\Eloquent;
 
 use App\Models\Event;
+use App\Models\EventMetric;
 use App\Models\Metric;
 use App\Models\Metric\MetricEventValue;
 use App\Repositories\MetricRepositoryInterface;
@@ -76,27 +77,35 @@ class MetricRepository extends BaseRepository implements MetricRepositoryInterfa
       //  return [];
         $userId = $params['user_id'];
         if ( Auth::id() == $userId)
-            return ["hide"];
+            return ["hidden"=>true];
         $eventId = $params['event_id'];
         $event = Event::where('id',$eventId)->first();
         if ($event->status != 1){
             return [];
         }
         $metricsList = [];
-        foreach ($event->metrics as &$metric) {
-            if ($metric->class != null)
+      $metrics =  EventMetric::where('event_id', $event->id)->with('metric','metric.configuration')->get();
+        foreach ($metrics as &$metric) {
+            if ($metric->metric->class != null)
                 continue;
-           if ($metric->isList($metric->type)){
-               array_push($metricsList,$metric);
+           if ($metric->metric->isList($metric->metric->type)){
+               array_push($metricsList,$metric->metric);
            } else {
                $values = MetricEventValue::where('user_id', $userId)->where('event_id', $eventId)
-                   ->where('metric_id', $metric->id)->get();
+                   ->where('metric_id', $metric->metric->id)->get();
                if ($values->count() < 1){
-                   array_push($metricsList,$metric);
+                   array_push($metricsList,$metric->metric);
                }
            }
         }
         return $metricsList;
      //   return MetricEventValue::where('user_id', $userId)->where('event_id', $eventId)->get();
+    }
+
+    public function getEventMetricsWithConfiguration($event)
+    {
+
+        return EventMetric::where('event_id', $event->id)->with('metric','metric.configuration')->get();
+    //    return $event->metrics->configuration;
     }
 }

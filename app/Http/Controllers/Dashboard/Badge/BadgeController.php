@@ -9,6 +9,7 @@ use App\Http\Requests\Badge\AddBadgeUserRequest;
 use App\Http\Requests\Badge\BadgeRequest;
 use App\Http\Requests\EventRequest;
 use App\Http\Requests\PointRuleRequest;
+use App\Models\Badge;
 use App\Models\Metric\PointRule;
 use App\Services\BadgeConditionService;
 use App\Services\BadgeService;
@@ -48,6 +49,10 @@ class BadgeController extends BaseController
 
     }
 
+    public function usersEarnedBadge (Badge $badge)
+    {
+        return $this->service->usersHaveBadge ($badge);
+    }
     public function index(Request $request)
     {
         $filters = $request->query();

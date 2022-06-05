@@ -117,7 +117,7 @@ class EventService extends BaseService
         $badgeUser = BadgeUser::where('event_id', $event->id)->where('user_id', $userId)->with('badge')->get();
 
         $status = 1;
-        $endedEventCount = Event::where('status', 2)->with('users', function ($query) use ($status, $userId) {
+        $endedEventCount = Event::where('status', 3)->with('users', function ($query) use ($status, $userId) {
             $query->where('status', $status)->where("user_id", $userId);
         })->get()->count();
         $rating = EventUserRating:: where('event_id', $event->id)->avg("rating");
@@ -129,7 +129,7 @@ class EventService extends BaseService
             "info" => $endedEventCount],
             [
                 "infoTitle" => "التقييم",
-                "info" => $rating],
+                "info" =>round($rating, 2) ],
             [
                 "infoTitle" => "الدور",
                 "info" => $isSupervisor]

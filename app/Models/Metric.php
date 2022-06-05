@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Metric\EventMetricConfiguration;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Metric extends BaseModel
@@ -21,6 +22,12 @@ class Metric extends BaseModel
     {
         return $this->belongsToMany(Event::class);
     }
+
+    public function configuration()
+    {
+        return $this->belongsTo(EventMetricConfiguration::class,'id','metric_id');
+    }
+
     public function isList($type){
         return $type == Metric::BOOLEAN_LIST_TYPE ||
             $type == Metric::STRING_LIST_TYPE ||

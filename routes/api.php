@@ -96,10 +96,15 @@ Route::prefix('dashboard')->group(function () {
         Route::post('newBadge', [BadgeController::class, 'newBadge']);
         Route::get('getMetricsOperations', [MetricQueryController::class, 'getMetricsOperations']);
 
+        Route::get('metric/get-event-metrics/{event}', [MetricController::class, 'getEventMetrics']);
+
+        Route::get('metric/metrics-event-user', [MetricController::class, 'getEventUserMetricValues']);
         //
         Route::get('getAllPointRules', [\App\Http\Controllers\Dashboard\PointRuleController::class, 'getAll']);
         Route::get('getAllBadges', [BadgeController::class, 'getAll']);
-
+        Route::get('userBadges', [BadgeController::class, 'index']);
+        Route::get('badgeUsers/{badge}', [BadgeController::class, 'usersEarnedBadge']);
+        Route::apiResource('metricConfiguration', \App\Http\Controllers\Dashboard\EventMetricConfigurationController::class);
 
         Route::get('event/end/{event}', [EventController::class, 'eventEnd']);
 
