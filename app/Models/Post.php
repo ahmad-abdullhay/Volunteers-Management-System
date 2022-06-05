@@ -15,7 +15,7 @@ class Post extends BaseModel implements HasMedia
 
     protected $guarded=[];
 
-    protected string $relatedToCurrentUser = "admin_id";
+//    protected string $relatedToCurrentUser = "admin_id";
 
     protected array $filterables =[
         StatusFilter::class
