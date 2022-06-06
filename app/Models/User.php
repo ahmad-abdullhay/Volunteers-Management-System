@@ -3,7 +3,12 @@
 namespace App\Models;
 
 
+<<<<<<< HEAD
 use App\Models\Message\Mail;
+=======
+use App\Models\Metric\UserPoint;
+use App\Models\Metric\UserTotalPoints;
+>>>>>>> develop
 use App\Services\BadgeService;
 
 use App\Filters\User\StatusFilter;
@@ -45,7 +50,7 @@ class User extends BaseModel implements
     protected array $filterables = [
         StatusFilter::class
     ];
-
+    protected $with = ['totalPoints'];
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -64,7 +69,6 @@ class User extends BaseModel implements
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
     public function joinRequest()
     {
         return $this->hasOne(JoinRequest::class, 'user_id');
@@ -79,9 +83,15 @@ class User extends BaseModel implements
     {
         return $this->belongsToMany(Badge::class);
     }
+<<<<<<< HEAD
 
     public function mails()
     {
         return $this->belongsToMany(Mail::class);
+=======
+    public function totalPoints ()
+    {
+        return $this->hasOne(UserTotalPoints::class);
+>>>>>>> develop
     }
 }

@@ -3,14 +3,14 @@
 namespace App\Models\Metric;
 
 use App\Models\BaseModel;
-use App\Models\User;
 
-class UserPoint  extends BaseModel
+class UserTotalPoints extends BaseModel
 {
 
-    protected $table = 'users_points';
+    protected $table = 'users_total_points';
 
     protected $guarded = [];
 
 
 }
+

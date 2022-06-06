@@ -33,7 +33,7 @@ class MetricRequest extends MainRequest
             case 'POST':
                 return [
                     'name' => 'required|unique:metrics,name',
-                    'type' => 'required|integer|between:1,6'
+                    'type' => 'required|integer|between:1,8'
                 ];
             case 'PUT':
                 return [

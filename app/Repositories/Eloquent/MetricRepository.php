@@ -3,7 +3,9 @@
 namespace App\Repositories\Eloquent;
 
 use App\Models\Event;
+use App\Models\EventMetric;
 use App\Models\Metric;
+use App\Models\Metric\MetricEnum;
 use App\Models\Metric\MetricEventValue;
 use App\Repositories\MetricRepositoryInterface;
 use App\Services\MetricService;
@@ -21,7 +23,18 @@ class MetricRepository extends BaseRepository implements MetricRepositoryInterfa
     {
         parent::__construct($model);
     }
-
+    public function attachEnums ($metric, $values)
+    {$products = [];
+        foreach ($values as  $value){
+        $enumValue = new MetricEnum;
+        $enumValue->metric_id = $metric->id;
+        $enumValue->enum_value = $value;
+            array_push($products, $enumValue);
+    }
+        $metric->metricEnum()->saveMany($products);
+        $metric->save();
+        //  $metric->fresh();
+    }
     public function insertMetricValue($payload)
     {
         $type = $payload['type'];
@@ -55,11 +68,13 @@ class MetricRepository extends BaseRepository implements MetricRepositoryInterfa
         $event = Event::where('id',$eventId)->first();
         $metricsList = [];
         foreach ($event->metrics as &$metric) {
+            if ($metric->class != null)
+                continue;
            $valuesAndDates =  $metricService->getOneEventMetricWithDate($metric->id,$userId,$eventId);
             $data = [
                 "metric" => $metric,
                 "values" => $valuesAndDates[0],
-                "dates" => $valuesAndDates[1][0],
+                "dates" => $valuesAndDates[1][0] ?? null,
 
 
             ];
@@ -74,25 +89,35 @@ class MetricRepository extends BaseRepository implements MetricRepositoryInterfa
       //  return [];
         $userId = $params['user_id'];
         if ( Auth::id() == $userId)
-            return ["hide"];
+            return ["hidden"=>true];
         $eventId = $params['event_id'];
         $event = Event::where('id',$eventId)->first();
         if ($event->status != 1){
             return [];
         }
         $metricsList = [];
-        foreach ($event->metrics as &$metric) {
-           if ($metric->isList($metric->type)){
-               array_push($metricsList,$metric);
+      $metrics =  EventMetric::where('event_id', $event->id)->with('metric','metric.configuration')->get();
+        foreach ($metrics as &$metric) {
+            if ($metric->metric->class != null)
+                continue;
+           if ($metric->metric->isList($metric->metric->type)){
+               array_push($metricsList,$metric->metric);
            } else {
                $values = MetricEventValue::where('user_id', $userId)->where('event_id', $eventId)
-                   ->where('metric_id', $metric->id)->get();
+                   ->where('metric_id', $metric->metric->id)->get();
                if ($values->count() < 1){
-                   array_push($metricsList,$metric);
+                   array_push($metricsList,$metric->metric);
                }
            }
         }
         return $metricsList;
      //   return MetricEventValue::where('user_id', $userId)->where('event_id', $eventId)->get();
+    }
+
+    public function getEventMetricsWithConfiguration($event)
+    {
+
+        return EventMetric::where('event_id', $event->id)->with('metric','metric.configuration')->get();
+    //    return $event->metrics->configuration;
     }
 }

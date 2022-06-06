@@ -11,4 +11,7 @@ return [
     4 => StringValue::class,
     5 => IntegerValue::class,
     6 => IntegerValue::class,
+    // for enums
+    7 => IntegerValue::class,
+    8 => IntegerValue::class,
 ];

@@ -22,5 +22,6 @@ class EventMetricConfigurationController extends CrudController
         // Call on parent constructor.
         parent::__construct($service, $request);
     }
+    //public function
 
 }

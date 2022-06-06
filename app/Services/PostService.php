@@ -17,10 +17,10 @@ class PostService extends BaseService
         parent::__construct($repository);
     }
 
-    public function readAll()
+    public function readAll($params)
     {
         return new SharedMessage(__('success.list', ['model' => 'Posts']),
-            $this->repository->readAll(),
+            $this->repository->readAll($params),
             true,
             null,
             200,

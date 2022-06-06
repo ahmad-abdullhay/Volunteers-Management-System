@@ -105,24 +105,34 @@ class EventService extends BaseService
     public function getEventEndReport(Event $event)
     {
            $userId = Auth::id();
-        if ($event->status != 3){
+        if ($event->status == 2){
             $hasRate = EventUserRating::where('event_id', $event->id)->where('user_id', $userId)->get()->count();
-            return ['no_report' => true,
+            return [
+                'no_report' => false,
                 'couldRate' => $hasRate < 1];
         }
 
-        $userId = 5;
+     //   $userId = 5;
         $userPoints = UserPoint::where('event_id', $event->id)->where('user_id', $userId)->get();
         $badgeUser = BadgeUser::where('event_id', $event->id)->where('user_id', $userId)->with('badge')->get();
 
         $status = 1;
-        $endedEventCount = Event::where('status', 2)->with('users', function ($query) use ($status, $userId) {
+        $endedEventCount = Event::where('status', 3)->with('users', function ($query) use ($status, $userId) {
             $query->where('status', $status)->where("user_id", $userId);
         })->get()->count();
-
-        $eventInfo = [[
+        $rating = EventUserRating:: where('event_id', $event->id)->avg("rating");
+        $isSupervisor = EventUser::where('event_id', $event->id)->where('user_id', $userId)->get()->first()->is_supervisor;
+        $isSupervisor == 0 ? $isSupervisor = 'متطوع' :$isSupervisor = 'مشرف' ;
+        $eventInfo = [
+            [
             "infoTitle" => "عدد الفعاليات المنتهية",
-            "info" => $endedEventCount]
+            "info" => $endedEventCount],
+            [
+                "infoTitle" => "التقييم",
+                "info" =>round($rating, 2) ],
+            [
+                "infoTitle" => "الدور",
+                "info" => $isSupervisor]
         ];
 
         return [
@@ -130,4 +140,5 @@ class EventService extends BaseService
             "points" => $userPoints,
             "badges" => $badgeUser];
     }
+
 }

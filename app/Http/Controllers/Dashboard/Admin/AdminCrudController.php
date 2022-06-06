@@ -4,9 +4,16 @@ namespace App\Http\Controllers\Dashboard\Admin;
 
 use App\Http\Controllers\CrudController;
 use App\Http\Requests\AdminRequest;
+
 use App\Models\User;
+
+use App\Http\Requests\MainRequest;
+
 use App\Services\Shared\BaseService;
 use App\Services\AdminService;
+use Faker\Provider\Person;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AdminCrudController extends CrudController
 {
@@ -24,9 +31,14 @@ class AdminCrudController extends CrudController
     }
 
 
+
     public function getMailCategories(){
 //        return User::query()->with("roles")->where("id","=",10)->get()->first();
         return $this->service->getMailCategories();
     }
 
+
+    public function CheckToken(MainRequest $request ){
+        return response()->json(["message" => "Authenticated"]);
+    }
 }

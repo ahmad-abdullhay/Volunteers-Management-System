@@ -18,5 +18,11 @@ class DatabaseSeeder extends Seeder
         $this->call(AdminSeeder::class);
         $this->call(PermissionSeeder::class);
         $this->call(MetricSeeder::class);
+        $this->call(EventCategorySeeder::class);
+        $this->call(EventSeeder::class);
+        $this->call(PostSeeder::class);
+        $this->call(BadgeSeeder::class);
+        $this->call(PointRuleSeeder::class);
+
     }
 }

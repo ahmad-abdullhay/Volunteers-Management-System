@@ -37,7 +37,6 @@ class BadgeConditionService extends BaseService
     public function apply(Event $event, Badge $badge,BadgeService $badgeService,MetricService $metricService)
     {
 
-   //     $userList = $event->with('users')->get()->first();
         $userList =  EventUser::select('user_id',)
             ->where('event_id', $event->id)
             ->where('status', "1")->get();
@@ -54,7 +53,12 @@ class BadgeConditionService extends BaseService
                 $query = MetricQuery::where('id', $badgeCondition->metrics_query_id)->first();
                 $finalResult =  $this->doOperations($badgeCondition,$query,$metricService,$user,$event);
                 $isTrue =
-                    $this->metricOperations->doCompare($query->compare_operation, $finalResult, $badgeCondition->compare_value);
+                    $this->metricOperations->doCompare($query->compare_operation, $finalResult, $query->compare_value);
+                $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+                $myJSON=json_encode($isTrue);
+                fwrite($myfile, $finalResult);
+                fwrite($myfile, $myJSON);
+                fclose($myfile);
                 }
                 // do compare
             if ($isTrue) {
@@ -77,6 +81,7 @@ class BadgeConditionService extends BaseService
         $valuesList = $metricService->getOneEventMetric($query->metric_id,$user->user_id,$event->id);
         if (empty($valuesList))
             return null;
+
         $finalResult = $this->metricOperations->doOperation($query->first_operation, $valuesList[0]);
         return $finalResult;
     }
@@ -93,6 +98,7 @@ class BadgeConditionService extends BaseService
         }
         // do second operation for outer array (results array)
         $finalResult = $this->metricOperations->doOperation($query->second_operation, $resultList);
+
         return $finalResult;
     }
 

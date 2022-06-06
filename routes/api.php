@@ -56,15 +56,30 @@ Route::group(['prefix' => 'mobile'], function () {
 
 });
 
+<<<<<<< HEAD
+=======
+//Route::get('/validate-token', function ($request) {
+//    dd($request->bearerToken());
+//    return ['data' => 'Token is valid'];
+//});
+
+
+>>>>>>> develop
 Route::prefix('dashboard')->group(function () {
 
     //Admin Login Route.
     Route::post('/login', [AuthController::class, 'login']);
 
+
     Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function(){
 
+<<<<<<< HEAD
 
         Route::get('mail/unread-count/{category_id}', [MailController::class,"AdminMessageUnread"]);
+=======
+        Route::get("check-token",[AdminCrudController::class,"CheckToken"]);
+
+>>>>>>> develop
 
         Route::get('me', [AuthController::class, 'me']);
 
@@ -77,6 +92,7 @@ Route::prefix('dashboard')->group(function () {
         Route::get('posts/accept/{id}',[PostController ::class,'acceptPost']);
 
         Route::resource('posts',PostController ::class);
+
 
 
         Route::patch('join-requests/change-status/{id}', [JoinRequestController::class, 'changeRequestStatus']);
@@ -107,14 +123,19 @@ Route::prefix('dashboard')->group(function () {
         Route::post('newBadge', [BadgeController::class, 'newBadge']);
         Route::get('getMetricsOperations', [MetricQueryController::class, 'getMetricsOperations']);
 
+        Route::get('metric/get-event-metrics/{event}', [MetricController::class, 'getEventMetrics']);
+
+        Route::get('metric/metrics-event-user', [MetricController::class, 'getEventUserMetricValues']);
         //
         Route::get('getAllPointRules', [\App\Http\Controllers\Dashboard\PointRuleController::class, 'getAll']);
         Route::get('getAllBadges', [BadgeController::class, 'getAll']);
-
+        Route::get('userBadges', [BadgeController::class, 'index']);
+        Route::get('badgeUsers/{badge}', [BadgeController::class, 'usersEarnedBadge']);
+        Route::apiResource('metricConfiguration', \App\Http\Controllers\Dashboard\EventMetricConfigurationController::class);
 
         Route::get('event/end/{event}', [EventController::class, 'eventEnd']);
 
-
+        Route::get('test', [RoleController::class, 'test']);
 
 
         Route::patch('activate-volunteer/{user}', [UserController::class, 'activateVolunteer']);
