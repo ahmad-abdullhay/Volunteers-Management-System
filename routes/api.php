@@ -56,15 +56,14 @@ Route::group(['prefix' => 'mobile'], function () {
 
 });
 
-<<<<<<< HEAD
-=======
+
+
 //Route::get('/validate-token', function ($request) {
 //    dd($request->bearerToken());
 //    return ['data' => 'Token is valid'];
 //});
 
 
->>>>>>> develop
 Route::prefix('dashboard')->group(function () {
 
     //Admin Login Route.
@@ -73,13 +72,12 @@ Route::prefix('dashboard')->group(function () {
 
     Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function(){
 
-<<<<<<< HEAD
+
 
         Route::get('mail/unread-count/{category_id}', [MailController::class,"AdminMessageUnread"]);
-=======
+
         Route::get("check-token",[AdminCrudController::class,"CheckToken"]);
 
->>>>>>> develop
 
         Route::get('me', [AuthController::class, 'me']);
 
