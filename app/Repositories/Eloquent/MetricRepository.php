@@ -5,6 +5,7 @@ namespace App\Repositories\Eloquent;
 use App\Models\Event;
 use App\Models\EventMetric;
 use App\Models\Metric;
+use App\Models\Metric\MetricEnum;
 use App\Models\Metric\MetricEventValue;
 use App\Repositories\MetricRepositoryInterface;
 use App\Services\MetricService;
@@ -22,7 +23,18 @@ class MetricRepository extends BaseRepository implements MetricRepositoryInterfa
     {
         parent::__construct($model);
     }
-
+    public function attachEnums ($metric, $values)
+    {$products = [];
+        foreach ($values as  $value){
+        $enumValue = new MetricEnum;
+        $enumValue->metric_id = $metric->id;
+        $enumValue->enum_value = $value;
+            array_push($products, $enumValue);
+    }
+        $metric->metricEnum()->saveMany($products);
+        $metric->save();
+        //  $metric->fresh();
+    }
     public function insertMetricValue($payload)
     {
         $type = $payload['type'];

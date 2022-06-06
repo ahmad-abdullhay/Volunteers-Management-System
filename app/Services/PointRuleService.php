@@ -49,18 +49,12 @@ class PointRuleService extends BaseService
 
             $result =  $this->metricOperations->doOperation($metricQuery->first_operation,$valuesList[0]);
             $points = $result * $pointRule->points;
-            $userPoint = new UserPoint;
-            $userPoint->event_id = $event->id;
-            $userPoint->point_rule_id = $pointRule->id;
-            $userPoint->points = $points;
-            $userPoint->notes = $pointRule->rule_name;
-            $userPoint->operation = "add";
-            $userPoint->user_id = $user->user_id;
-            $userPoint->save();
-
+            $myfile = fopen("newfile3.txt",  "a") or die("Unable to open file!");
+            $txt = json_encode($points);
+            fwrite($myfile, $txt);
+            fclose($myfile);
+            $this->repository->addPointsToUserFromPointRule( $pointRule->id,$event->id,$user->user_id,$points,$pointRule->rule_name);
         }
-
-      //  return $event;
     }
 }
 

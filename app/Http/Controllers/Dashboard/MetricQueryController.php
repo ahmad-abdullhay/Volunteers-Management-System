@@ -82,7 +82,21 @@ class MetricQueryController extends CrudController
                     ],
                     "compareOperations" => [],
                 ],
-
+                [
+                    "type" => 7,
+                    "operations" => [],
+                    "compareOperations" => [
+                        ['id' => 'equal', 'label' => 'metric is equal','hasValue'=>true]
+                    ],
+                ],
+                [
+                    "type" => 8,
+                    "operations" => [
+                        ['id' => 'enumMost', 'label' => 'values sum', 'to' => '7'],
+                        ['id' => 'count', 'label' => 'values count', 'to' => '5'],
+                    ],
+                    "compareOperations" => [],
+                ],
             ];
     }
 }

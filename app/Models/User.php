@@ -4,6 +4,7 @@ namespace App\Models;
 
 
 use App\Models\Metric\UserPoint;
+use App\Models\Metric\UserTotalPoints;
 use App\Services\BadgeService;
 
 use App\Filters\User\StatusFilter;
@@ -40,7 +41,7 @@ class User extends BaseModel implements
     protected array $filterables = [
         StatusFilter::class
     ];
-
+    protected $with = ['totalPoints'];
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -73,5 +74,8 @@ class User extends BaseModel implements
     {
         return $this->belongsToMany(Badge::class);
     }
-
+    public function totalPoints ()
+    {
+        return $this->hasOne(UserTotalPoints::class);
+    }
 }

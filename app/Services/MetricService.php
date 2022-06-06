@@ -24,7 +24,33 @@ class MetricService extends BaseService
         $this->repository = $repository;
         parent::__construct($repository);
     }
+    public function store($payload): SharedMessage
+    {
+        if (isset($payload['enums'])) {
 
+            $enums = $payload['enums'];
+
+            unset($payload['enums']);
+
+
+            $metric = $this->repository->create($payload);
+
+            $this->repository->attachEnums(
+                $metric,
+                $enums,
+            );
+
+            return new SharedMessage(__('success.store', ['model' => $this->modelName]),
+                $metric->fresh(),
+                true,
+                null,
+                200
+            );
+        }
+
+
+        return parent::store($payload);
+    }
     public function insertMetricValue(array $payload,EventMetricConfigurationService $configurationService)
     {
         $validation =   $configurationService->isValid($payload,$this);
@@ -119,6 +145,7 @@ class MetricService extends BaseService
     {
         $pointRule = PointRule::where('metrics_query_id', $query->id)->first();
         if ($pointRule != null) {
+
             $pointRuleService->apply($event, $pointRule, $query, $this);
             return true;
         }
