@@ -11,7 +11,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Post extends BaseModel implements HasMedia
 {
     use InteractsWithMedia;
-    protected $with = ['media'];
+    protected $with = ['media','admin'];
 
     protected $guarded=[];
 
