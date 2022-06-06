@@ -3,12 +3,12 @@
 namespace App\Models;
 
 
-<<<<<<< HEAD
+
 use App\Models\Message\Mail;
-=======
+
 use App\Models\Metric\UserPoint;
 use App\Models\Metric\UserTotalPoints;
->>>>>>> develop
+
 use App\Services\BadgeService;
 
 use App\Filters\User\StatusFilter;
@@ -40,7 +40,7 @@ class User extends BaseModel implements
     const ACTIVE_STATUS = 1;
     const INACTIVE_STATUS = 0;
 
-    protected $with = ['roles'];
+    protected $with = ['roles',"totalPoints"];
 
     protected $guard_name = 'users';
 
@@ -50,7 +50,6 @@ class User extends BaseModel implements
     protected array $filterables = [
         StatusFilter::class
     ];
-    protected $with = ['totalPoints'];
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -83,15 +82,13 @@ class User extends BaseModel implements
     {
         return $this->belongsToMany(Badge::class);
     }
-<<<<<<< HEAD
 
     public function mails()
     {
         return $this->belongsToMany(Mail::class);
-=======
+    }
     public function totalPoints ()
     {
         return $this->hasOne(UserTotalPoints::class);
->>>>>>> develop
     }
 }
