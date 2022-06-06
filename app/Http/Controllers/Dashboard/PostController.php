@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\CrudController;
 use App\Http\Requests\PostRequest;
 use App\Services\PostService;
+use Illuminate\Http\Request;
+
 
 class PostController extends CrudController
 {
@@ -19,11 +21,9 @@ class PostController extends CrudController
         parent::__construct($postService, $request);
     }
 
-    public function readAll(){
-        return $this->handleSharedMessage($this->service->readAll()
-
-
-        );
+    public function readAll(Request $request){
+        $params =  $request->query();
+        return $this->handleSharedMessage($this->service->readAll($params));
     }
 
     public function readOne($id){
