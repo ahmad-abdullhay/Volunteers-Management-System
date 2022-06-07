@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard;
+namespace App\Http\Controllers\Dashboard\Metric;
 
 use App\Http\Controllers\CrudController;
 use App\Http\Requests\MetricRequest;
 use App\Services\MetricService;
 
-class MetricController extends CrudController
+class MetricCrudController extends CrudController
 {
     /**
      * Create a new instance form branch repository.

@@ -160,6 +160,13 @@ return [
     ],
     'permissions' => [
         'role-management',
-        'user-management'
+        'user-management',
+        'badge-management',
+        'event-management',
+        'metrics-management',
+        'categories-management',
+        'mails-management',
+        'notifications-management',
+        'posts-management',
     ]
 ];

@@ -188,6 +188,7 @@ class MetricService extends BaseService
     {
 
         $metric = Metric::where('id', $metricId)->first();
+
         $metricType = $metric->type;
         $className = config('metric.' . $metricType);
         $metrics = MetricEventValue::select('event_id', 'metric_value_type_id', 'valuable_type')
@@ -214,5 +215,15 @@ class MetricService extends BaseService
 
         }
         return [$metricsArray,$datesArray];
+    }
+
+    public function getUserMetricValues($params)
+    {
+        return new SharedMessage(__('success.store', ['model' => $this->modelName]),
+            $this->repository->getUserMetricValues($params),
+            true,
+            null,
+            200
+        );
     }
 }

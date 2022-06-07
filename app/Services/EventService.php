@@ -130,4 +130,59 @@ class EventService extends BaseService
             "points" => $userPoints,
             "badges" => $badgeUser];
     }
+
+    public function view(int $id, array $columns = ['*'], array $relations = [], array $appends = [])
+    {
+        $data = parent::view($id, $columns, ['metrics'], $appends)->data;
+
+        $users = collect($data['users']);
+
+        //Getting Accepted users.
+        $data['acceptedUsers'] = array_values($users
+            ->where('pivot.status', EventUser::ACCEPTED_STATUS)
+            ->where('pivot.is_supervisor', EventUser::NOT_SUPERVISOR)->toArray());
+
+
+        //Getting Event Supervisors.
+        $data['supervisors'] = array_values($users
+            ->where('pivot.is_supervisor', EventUser::SUPERVISOR)->toArray());
+
+        //Getting Pending Join requests.
+        $data['pendingUsers'] = array_values($users
+            ->where('pivot.status', EventUser::PENDING_STATUS)->toArray());
+
+        //Getting Pending Join requests.
+        $data['rejectedUsers'] = array_values($users
+            ->where('pivot.status', EventUser::REJECTED_STATUS)->toArray());
+
+        unset($data['users']);
+
+        return new SharedMessage(__('success.get', ['model' => $this->modelName]),
+            $data,
+        true,
+        null,
+        200
+        );
+
+    }
+
+    public function removeUserFromEvent($params)
+    {
+        return new SharedMessage(__('event.user-removed'),
+            $this->repository->removeUserFromEvent($params),
+            true,
+            null,
+            200
+        );
+    }
+
+    public function changeUserRoleStatus($params)
+    {
+        return new SharedMessage(__('event.status-changed'),
+            $this->repository->changeUserRoleStatus($params),
+            true,
+            null,
+            200
+        );
+    }
 }
