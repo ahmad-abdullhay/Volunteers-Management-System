@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Common\SharedMessage;
 use App\Models\Badge;
+use App\Models\BadgeUser;
+use App\Models\Event;
 use App\Models\Metric\PointRule;
 use App\Repositories\Eloquent\BadgeRepository;
 use App\Services\Shared\BaseService;
@@ -62,6 +64,11 @@ class BadgeService extends BaseService
             null,
             200
         );
+    }
+
+    public function usersHaveBadge(Badge $badge)
+    {
+        return Badge::where('id', $badge->id)->with('users')->get();
     }
 
 }

@@ -27,4 +27,7 @@ class UserController extends BaseController
         return $this->handleSharedMessage(
             $this->userService->ChangeVolunteerJoinEventStatus($request->post()));
     }
-}
+
+    public function getMailCategories(){
+        return $this->userService->getMailCategories();
+    }}

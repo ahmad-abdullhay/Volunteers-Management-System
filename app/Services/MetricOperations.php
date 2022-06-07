@@ -29,6 +29,7 @@ class MetricOperations
 
     public function more($compareValue,$value)
     {
+
         return $compareValue > $value;
     }
 
@@ -38,6 +39,7 @@ class MetricOperations
     }
     public function isTrue($compareValue)
     {
+
         return $compareValue == 1;
     }
     public function isFalse($compareValue)
@@ -60,6 +62,7 @@ class MetricOperations
             "falseCount" => $this->falseCount($valueList),
             "mostFalse" => $this->mostFalse($valueList),
             "mostTrue" => $this->mostTrue($valueList),
+            "enumMost" => $this->enumMost($valueList),
             default => null,
         };
     }
@@ -95,10 +98,12 @@ class MetricOperations
     }
     public function allTrue($valueList)
     {
+
         foreach ($valueList as &$value){
-            if ($value == 0)
+            if ($value === 0)
                 return false;
         }
+
         return true;
     }
 
@@ -127,9 +132,18 @@ class MetricOperations
         return $counter;
     }
     public function mostTrue ($valueList){
-          return  $this->trueCount($valueList) > $this->countArray($valueList);
+
+          return  $this->trueCount($valueList) > ($this->countArray($valueList)/2);
     }
     public function mostFalse ($valueList){
-        return  $this->falseCount($valueList) > $this->countArray($valueList);
+        return  $this->falseCount($valueList) > ($this->countArray($valueList)/2);
+    }
+    public function enumMost ($valueList)
+    {
+        $values = array_count_values($valueList);
+        if (count($valueList) == 0)
+            return null;
+        $maxIndex = array_search (max($values), $values);
+        return $maxIndex;
     }
 }

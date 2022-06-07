@@ -1,8 +1,12 @@
 <?php
 
 namespace App\Models;
+interface PreMetric {
 
-class EventUser extends BaseModel
+    public function getValue ();
+
+}
+class EventUser extends BaseModel implements PreMetric
 {
     const NOT_SUPERVISOR = 0;
     const SUPERVISOR = 1;
@@ -14,5 +18,20 @@ class EventUser extends BaseModel
     protected $table = 'event_user';
 
     protected $fillable = ['user_id', 'event_id', 'status', 'is_supervisor'];
+
+
+
+    public function getValue()
+    {
+        if ($this->status == EventUser::ACCEPTED_STATUS){
+
+            return $this->is_supervisor;
+        }
+         else {
+             return null;
+         }
+
+    }
+
 
 }

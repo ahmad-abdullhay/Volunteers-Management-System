@@ -11,11 +11,11 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Post extends BaseModel implements HasMedia
 {
     use InteractsWithMedia;
-    protected $with = ['media'];
+    protected $with = ['media','admin'];
 
     protected $guarded=[];
 
-    protected string $relatedToCurrentUser = "admin_id";
+//    protected string $relatedToCurrentUser = "admin_id";
 
     protected array $filterables =[
         StatusFilter::class

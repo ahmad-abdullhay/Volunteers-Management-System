@@ -11,6 +11,8 @@ class BaseModel extends Model
     //Define Translatable Columns.
     public $translatedAttributes  = [];
 
+    public string|null $relatedToCurrentUser = null;
+
     //Define Array Filters.
     protected array $filterables = [];
 
@@ -32,6 +34,7 @@ class BaseModel extends Model
     }
     //Define Model Searchable Attributes.
     protected $searchableAttributes = [];
+    protected $searchable = [];
 
     //Get All  Searchable attributes.
     public function getSearchableAttributes()

@@ -7,7 +7,7 @@ use App\Http\Controllers\Mobile\AuthController;
 use App\Http\Controllers\Mobile\UserController;
 use App\Http\Controllers\Mobile\MetricController;
 use App\Http\Controllers\Mobile\EventController;
-
+use App\Http\Controllers\Dashboard\Message\MailController;
 use App\Http\Controllers\Dashboard\PostController;
 use App\Http\Controllers\Dashboard\Badge\BadgeController;
 use App\Http\Controllers\Mobile\NotificationController;
@@ -16,6 +16,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/sign-up', [AuthController::class, 'signUp']);
 
 Route::group(['middleware' => ['auth:sanctum', 'type.user']], function (){
+
+    Route::get('mail/unread-count/{category_id}', [MailController::class,"UserMessageUnread"]);
+
 
     Route::get('me', [AuthController::class, 'me']);
 
@@ -26,6 +29,14 @@ Route::group(['middleware' => ['auth:sanctum', 'type.user']], function (){
         Route::get('read-one/{id}',[PostController::class,'readOne']);
         Route::get('read-all',[PostController::class,'readAll']);
     });
+
+    Route::get("user/mail-category",[UserController::class,"getMailCategories"]);
+
+    Route::resource('mail', MailController::class);
+
+    Route::get('mail/get-by-category/{category_id}', [MailController::class,"getByUserIdWithCategoryId"]);
+
+
 
     Route::post('/join-event', [UserController::class, 'joinEvent']);
 

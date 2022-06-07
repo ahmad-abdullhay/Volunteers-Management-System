@@ -24,7 +24,33 @@ class MetricService extends BaseService
         $this->repository = $repository;
         parent::__construct($repository);
     }
+    public function store($payload): SharedMessage
+    {
+        if (isset($payload['enums'])) {
 
+            $enums = $payload['enums'];
+
+            unset($payload['enums']);
+
+
+            $metric = $this->repository->create($payload);
+
+            $this->repository->attachEnums(
+                $metric,
+                $enums,
+            );
+
+            return new SharedMessage(__('success.store', ['model' => $this->modelName]),
+                $metric->fresh(),
+                true,
+                null,
+                200
+            );
+        }
+
+
+        return parent::store($payload);
+    }
     public function insertMetricValue(array $payload,EventMetricConfigurationService $configurationService)
     {
         $validation =   $configurationService->isValid($payload,$this);
@@ -48,6 +74,15 @@ class MetricService extends BaseService
     {
         return new SharedMessage(__('success.store', ['model' => $this->modelName]),
             $this->repository->getEventMetrics($event),
+            true,
+            null,
+            200
+        );
+    }
+    public function getEventMetricsWithConfiguration($event)
+    {
+        return new SharedMessage(__('success.store', ['model' => $this->modelName]),
+            $this->repository->getEventMetricsWithConfiguration($event),
             true,
             null,
             200
@@ -110,6 +145,7 @@ class MetricService extends BaseService
     {
         $pointRule = PointRule::where('metrics_query_id', $query->id)->first();
         if ($pointRule != null) {
+
             $pointRuleService->apply($event, $pointRule, $query, $this);
             return true;
         }
@@ -136,8 +172,10 @@ class MetricService extends BaseService
         $metric = Metric::where('id', $metricId)->first();
         $metricType = $metric->type;
         $className = config('metric.' . $metricType);
+        $eventsId = Event::where ('status',2)->pluck('id')->toArray();;
 
         $metrics = MetricEventValue::select('event_id', 'metric_value_type_id', 'valuable_type')
+            ->whereIn("event_id",$eventsId)
             ->where('valuable_type', $className)
             ->where('user_id', $userId)
             ->where('metric_id', $metricId)
@@ -162,6 +200,9 @@ class MetricService extends BaseService
     {
 
         $metric = Metric::where('id', $metricId)->first();
+        if ($metric->class != null){
+            return $this->getOneEventPreDefinedMetric($metric,$userId, $eventId);
+        }
         $metricType = $metric->type;
         $className = config('metric.' . $metricType);
         $metrics = MetricEventValue::select('event_id', 'metric_value_type_id', 'valuable_type')
@@ -183,7 +224,41 @@ class MetricService extends BaseService
         }
         return $metricsArray;
     }
-
+    public function getOneEventPreDefinedMetric ($metric, $userId, $eventId)
+    {
+        $model = app(ucfirst($metric->class));
+         $values = $model->where('user_id',$userId)->where('event_id',$eventId)->get();
+        $eventValues = [];
+        foreach ($values as $value){
+            if ($value->getValue() !== null)
+                array_push($eventValues, $value->getValue());
+        }
+//        $myfile = fopen("more.txt", "w") or die("Unable to open file!");
+//        $myJSON=json_encode($eventValues);
+//        //     fwrite($myfile, '$compareValue');
+//        fwrite($myfile, $myJSON);
+//        fclose($myfile);
+         return [$eventValues];
+    }
+    public function getAllPreDefinedMetric ($metric, $userId)
+    {
+        $metric = Metric::where('id', $metric)->first();
+        $model = app(ucfirst($metric->class));
+        $eventsId = Event::where ('status',2)->pluck('id')->toArray();;
+        $events = $model->whereIn("event_id",$eventsId)->where('user_id',$userId)->get()->groupBy(['event_id']);
+    //    return $events;
+        $arrays = [];
+        foreach ($events as &$event ) {
+            $eventValues = [];
+            foreach ($event as $value){
+                if ($value->getValue() !== null)
+                    array_push($eventValues, $value->getValue());
+            }
+            if (count($eventValues) > 0)
+            array_push($arrays,$eventValues);
+        }
+        return $arrays;
+    }
     public function getOneEventMetricWithDate($metricId, $userId, $eventId)
     {
 

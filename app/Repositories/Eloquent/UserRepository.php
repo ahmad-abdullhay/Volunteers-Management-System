@@ -21,7 +21,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function activateVolunteer(User $user)
     {
         $user->is_active = !$user->is_active;
+//        dd($user->is_active);
         $user->save();
+
         return $user->is_active;
     }
 
@@ -33,9 +35,14 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
     public function joinEvent($payload)
     {
+
         return EventUser::create([
             'user_id' => auth()->id(),
             'event_id' => $payload['event_id']
         ]);
+    }
+
+    public function searchByName($keyWord){
+       return  User::query()->where("name","LIKE","%{$keyWord}%")->get();
     }
 }

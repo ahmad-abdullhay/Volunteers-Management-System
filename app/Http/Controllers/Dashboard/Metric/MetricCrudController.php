@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Dashboard\Metric;
 
 use App\Http\Controllers\CrudController;
 use App\Http\Requests\MetricRequest;
+use App\Models\Event;
 use App\Services\MetricService;
+use Illuminate\Http\Request;
 
 class MetricCrudController extends CrudController
 {
@@ -18,6 +20,21 @@ class MetricCrudController extends CrudController
     {
         // Call on parent constructor.
         parent::__construct($service, $request);
+    }
+    public function getEventMetrics(Event $event)
+    {
+        return $this->handleSharedMessage(
+            $this->service->getEventMetricsWithConfiguration($event)
+        );
+    }
+
+    public function getEventUserMetricValues(Request $request)
+    {
+        $params = $request->query();
+
+        return $this->handleSharedMessage(
+            $this->service->getEventUserMetricValues($params)
+        );
     }
 
 }
