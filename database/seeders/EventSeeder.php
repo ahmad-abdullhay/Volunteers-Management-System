@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Models\EventCategory;
 use App\Models\EventMetric;
 use App\Models\EventUser;
+use App\Models\Metric\EventMetricConfiguration;
 use Illuminate\Database\Seeder;
 
 class EventSeeder extends Seeder
@@ -28,17 +29,39 @@ class EventSeeder extends Seeder
             "required_volunteers_number" => 10,
             "end_date" => "2022-06-16",
         ])->users()->attach($usersData);
+
         EventMetric::create([
             "event_id" => 1,
             "metric_id" => 1,
+        ]);
+        EventMetricConfiguration::create([
+            "event_id" => 1,
+            "metric_id" => 1,
+            "values_limit" => 10,
+            "min_value" => 1,
+            "max_value" => 5,
         ]);
         EventMetric::create([
             "event_id" => 1,
             "metric_id" => 2,
         ]);
+        EventMetricConfiguration::create([
+            "event_id" => 1,
+            "metric_id" => 2,
+            "values_limit" => 10,
+        ]);
         EventMetric::create([
             "event_id" => 1,
             "metric_id" => 3,
+        ]);
+        EventMetricConfiguration::create([
+            "event_id" => 1,
+            "metric_id" => 3,
+            "at_event_end" => 1,
+        ]);
+        EventMetric::create([
+            "event_id" => 1,
+            "metric_id" => 4,
         ]);
         EventCategory::create([
             "event_id" => 1,
@@ -89,21 +112,71 @@ class EventSeeder extends Seeder
             'status' => 1,
             'is_supervisor' => 0
         ]);
+
         EventMetric::create([
             "event_id" => 3,
             "metric_id" => 1,
         ]);
+        EventMetricConfiguration::create([
+            "event_id" => 3,
+            "metric_id" => 1,
+            "values_limit" => 10,
+            "min_value" => 1,
+            "max_value" => 5,
+        ]);
         EventMetric::create([
+            "event_id" =>3,
+            "metric_id" => 2,
+        ]);
+        EventMetricConfiguration::create([
             "event_id" => 3,
             "metric_id" => 2,
+            "values_limit" => 10,
         ]);
         EventMetric::create([
             "event_id" => 3,
             "metric_id" => 3,
         ]);
+        EventMetricConfiguration::create([
+            "event_id" => 3,
+            "metric_id" => 3,
+            "at_event_end" => 1,
+        ]);
+        EventMetric::create([
+            "event_id" => 3,
+            "metric_id" => 4,
+        ]);
         EventCategory::create([
             "event_id" => 3,
             "category_id" => 2,
+        ]);
+
+        EventMetric::create([
+            "event_id" => 3,
+            "metric_id" => 5,
+        ]);
+        EventMetricConfiguration::create([
+            "event_id" => 3,
+            "metric_id" => 5,
+            "at_event_end" => 1,
+        ]);
+        EventMetric::create([
+            "event_id" =>3,
+            "metric_id" => 6,
+        ]);
+        EventMetricConfiguration::create([
+            "event_id" => 3,
+            "metric_id" => 6,
+            "at_event_end" => 1,
+        ]);
+        EventMetric::create([
+            "event_id" => 3,
+            "metric_id" => 7,
+        ]);
+        EventMetricConfiguration::create([
+            "event_id" => 3,
+            "metric_id" => 7,
+            "at_event_end" => 1,
         ]);
         Event::create([
             "name" => "فعالية التعريف بالاختصاصات",
@@ -126,17 +199,66 @@ class EventSeeder extends Seeder
             'status' => 1,
             'is_supervisor' => 0
         ]);
+
         EventMetric::create([
             "event_id" => 4,
             "metric_id" => 1,
+        ]);
+        EventMetricConfiguration::create([
+            "event_id" => 4,
+            "metric_id" => 1,
+            "values_limit" => 7,
+            "min_value" => 1,
+            "max_value" => 3,
         ]);
         EventMetric::create([
             "event_id" => 4,
             "metric_id" => 2,
         ]);
+        EventMetricConfiguration::create([
+            "event_id" => 4,
+            "metric_id" => 2,
+            "values_limit" => 7,
+        ]);
         EventMetric::create([
             "event_id" => 4,
             "metric_id" => 3,
+        ]);
+        EventMetricConfiguration::create([
+            "event_id" => 4,
+            "metric_id" => 3,
+            "at_event_end" => 1,
+        ]);
+        EventMetric::create([
+            "event_id" => 4,
+            "metric_id" => 4,
+        ]);
+        EventMetric::create([
+            "event_id" => 4,
+            "metric_id" => 5,
+        ]);
+        EventMetricConfiguration::create([
+            "event_id" => 4,
+            "metric_id" => 5,
+            "at_event_end" => 1,
+        ]);
+        EventMetric::create([
+            "event_id" => 4,
+            "metric_id" => 6,
+        ]);
+        EventMetricConfiguration::create([
+            "event_id" => 4,
+            "metric_id" => 6,
+            "at_event_end" => 1,
+        ]);
+        EventMetric::create([
+            "event_id" => 4,
+            "metric_id" => 7,
+        ]);
+        EventMetricConfiguration::create([
+            "event_id" => 4,
+            "metric_id" => 7,
+            "at_event_end" => 1,
         ]);
         EventCategory::create([
             "event_id" => 4,
@@ -159,12 +281,7 @@ class EventSeeder extends Seeder
             "status" => 0
 
         ])->users()->attach($usersData);;
-        EventUser::create([
-            'event_id' => 5,
-            'user_id' => 2,
-            'status' => 1,
-            'is_supervisor' => 0
-        ]);
+
         EventUser::create([
             'event_id' => 5,
             'user_id' => 3,

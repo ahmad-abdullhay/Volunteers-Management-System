@@ -23,8 +23,8 @@ class EventUser extends BaseModel implements PreMetric
 
     public function getValue()
     {
-        if ($this->status == EventUser::ACCEPTED_STATUS){
 
+        if ($this->status === EventUser::ACCEPTED_STATUS){
             return $this->is_supervisor;
         }
          else {

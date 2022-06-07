@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PostSeeder::class);
         $this->call(BadgeSeeder::class);
         $this->call(PointRuleSeeder::class);
+        $this->call(MailSeeder::class);
 
     }
 }

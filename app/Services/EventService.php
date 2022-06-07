@@ -113,7 +113,7 @@ class EventService extends BaseService
         }
 
      //   $userId = 5;
-        $userPoints = UserPoint::where('event_id', $event->id)->where('user_id', $userId)->get();
+        $userPoints = UserPoint::where('event_id', $event->id)->where('user_id', $userId)->where('points' ,'>',0)->get();
         $badgeUser = BadgeUser::where('event_id', $event->id)->where('user_id', $userId)->with('badge')->get();
 
         $status = 1;

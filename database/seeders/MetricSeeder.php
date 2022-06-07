@@ -31,6 +31,74 @@ class MetricSeeder extends Seeder
     "description"=> "التزم المتطوع لنهاية الفعالية",
     "type"=> 1
         ]);
+        Metric::create([
+            "name"=>"مشرف على فعالية",
+            "description"=> "مشاركة المتطوع بدور مشرف",
+            "type"=> 1,
+            "class" => "App\Models\EventUser"
+        ]);
 
+        Metric::create([
+            "name"=>"التفاعل",
+            "description"=> "تقييم مدى تفاعل المتطوع مع المتطوعين الاخرين",
+            "type"=> 7,
+        ]);
+        $this->addRateEnums(5);
+
+        Metric::create([
+            "name"=>"التقبل",
+            "description"=> "تقييم مدى تقبل المتطوع للافكار والاوامر",
+            "type"=> 7,
+        ]);
+        $this->addRateEnums(6);
+
+        Metric::create([
+            "name"=>"وصف الشخصية",
+            "description"=> "الوصف الاقرب لشخصية المتطوع في الفعالية",
+            "type"=> 7,
+        ]);
+        Metric\MetricEnum::create([
+            "enum_value" => "المهندس",
+            "metric_id"=>7
+        ]);
+        Metric\MetricEnum::create([
+            "enum_value" => "المسالم",
+            "metric_id"=>7
+        ]);
+        Metric\MetricEnum::create([
+            "enum_value" => "العادي",
+            "metric_id"=>7
+        ]);
+        Metric\MetricEnum::create([
+            "enum_value" => "المشاكس",
+            "metric_id"=>7
+        ]);
+        Metric\MetricEnum::create([
+            "enum_value" => "المحبوب",
+            "metric_id"=>7
+        ]);
+    }
+    public function addRateEnums ($metric_id)
+    {
+        Metric\MetricEnum::create([
+            "enum_value" => "ضعيف",
+            "metric_id"=>$metric_id
+        ]);
+        Metric\MetricEnum::create([
+            "enum_value" => "مقبول",
+            "metric_id"=>$metric_id
+        ]);
+        Metric\MetricEnum::create([
+            "enum_value" => "جيد",
+            "metric_id"=>$metric_id
+        ]);
+        Metric\MetricEnum::create([
+            "enum_value" => "جيد جدا",
+            "metric_id"=>$metric_id
+        ]);
+        Metric\MetricEnum::create([
+            "enum_value" => "ممتاز",
+            "metric_id"=>$metric_id
+        ]);
     }
 }

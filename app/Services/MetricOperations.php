@@ -24,7 +24,8 @@ class MetricOperations
 
     public function equal($compareValue,$value)
     {
-        return $compareValue == $value;
+
+        return $compareValue === $value;
     }
 
     public function more($compareValue,$value)
@@ -39,12 +40,16 @@ class MetricOperations
     }
     public function isTrue($compareValue)
     {
-
-        return $compareValue == 1;
+        $myfile = fopen("isTrue.txt", "a") or die("Unable to open file!");
+        $myJSON=json_encode([$compareValue]);
+        fwrite($myfile, $myJSON);
+        fwrite($myfile, "\n");
+        fclose($myfile);
+        return $compareValue === 1;
     }
     public function isFalse($compareValue)
     {
-        return $compareValue == 0;
+        return $compareValue === 0;
     }
 
     public function doOperation($operation, $valueList)
@@ -126,7 +131,7 @@ class MetricOperations
     public function falseCount ($valueList){
         $counter = 0;
         foreach ($valueList as &$value){
-            if ($value == 0)
+            if ($value === 0)
                 $counter++;
         }
         return $counter;
@@ -141,7 +146,7 @@ class MetricOperations
     public function enumMost ($valueList)
     {
         $values = array_count_values($valueList);
-        if (count($valueList) == 0)
+        if (count($valueList) === 0)
             return null;
         $maxIndex = array_search (max($values), $values);
         return $maxIndex;

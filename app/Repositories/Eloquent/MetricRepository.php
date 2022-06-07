@@ -93,12 +93,37 @@ class MetricRepository extends BaseRepository implements MetricRepositoryInterfa
         $eventId = $params['event_id'];
         $event = Event::where('id',$eventId)->first();
         if ($event->status != 1){
+            if ($event->status == 2){
+                $metricsList = [];
+                $metrics =  EventMetric::where('event_id', $event->id)->with('metric','metric.configuration')->get();
+                foreach ($metrics as &$metric) {
+                    if ($metric->metric->class != null)
+                        continue;
+
+                    if ($metric->metric->configuration != null and $metric->metric->configuration->at_event_end == 1){
+                        if ($metric->metric->isList($metric->metric->type)){
+                            array_push($metricsList,$metric->metric);
+                        } else {
+                            $values = MetricEventValue::where('user_id', $userId)->where('event_id', $eventId)
+                                ->where('metric_id', $metric->metric->id)->get();
+                            if ($values->count() < 1){
+                                array_push($metricsList,$metric->metric);
+                            }
+                        }
+                    }
+                }
+                return $metricsList;
+            }
+                else
             return [];
         }
         $metricsList = [];
       $metrics =  EventMetric::where('event_id', $event->id)->with('metric','metric.configuration')->get();
         foreach ($metrics as &$metric) {
             if ($metric->metric->class != null)
+                continue;
+
+            if ($metric->metric->configuration != null and $metric->metric->configuration->at_event_end == 1)
                 continue;
            if ($metric->metric->isList($metric->metric->type)){
                array_push($metricsList,$metric->metric);

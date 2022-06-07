@@ -31,7 +31,7 @@ class EventMetricConfigurationService extends BaseService
                 return "القيمة المدخلة اكبر من القيمة العليا";
         }
         if ($configuration->min_value != null){
-            if ($payload['value'] < $configuration->min_value)
+            if ($payload['value'] <$configuration->min_value )
                 return "القيمة المدخلة اصغر من القيمة الدنيا";
         }
 

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('content');
             $table->tinyInteger('is_read')->comment('(0) => Not read, (1) => Read')->default(0);
 
-            $table->morphs('reasonable');
+        //    $table->morphs('reasonable');
             $table->foreignId('user_id')
                 ->constrained();
             $table->timestamps();

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer("max_value")->nullable();
             $table->integer("min_value")->nullable();
             $table->integer("values_limit")->nullable();
-            $table->boolean("at_event_end")->nullable();
+            $table->boolean("at_event_end")->default(0);
             $table->foreignId('metric_id')
                 ->constrained();
             $table->foreignId('event_id')

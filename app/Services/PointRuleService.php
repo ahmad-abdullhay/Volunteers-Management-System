@@ -40,14 +40,16 @@ class PointRuleService extends BaseService
         //$userList =   $event->with('users')->get()->first();
 
      //   return $userList['users'];
+
         foreach ($userList as &$user){
             // get metrics list
             $valuesList = $metricService->getOneEventMetric($metricQuery->metric_id,$user->user_id,$event->id);
             if (empty($valuesList)){
                 continue;
             }
-
+      //      dd($valuesList[0]);
             $result =  $this->metricOperations->doOperation($metricQuery->first_operation,$valuesList[0]);
+
             $points = $result * $pointRule->points;
             $myfile = fopen("newfile3.txt",  "a") or die("Unable to open file!");
             $txt = json_encode($points);

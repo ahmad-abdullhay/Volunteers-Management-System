@@ -233,11 +233,7 @@ class MetricService extends BaseService
             if ($value->getValue() !== null)
                 array_push($eventValues, $value->getValue());
         }
-//        $myfile = fopen("more.txt", "w") or die("Unable to open file!");
-//        $myJSON=json_encode($eventValues);
-//        //     fwrite($myfile, '$compareValue');
-//        fwrite($myfile, $myJSON);
-//        fclose($myfile);
+
          return [$eventValues];
     }
     public function getAllPreDefinedMetric ($metric, $userId)

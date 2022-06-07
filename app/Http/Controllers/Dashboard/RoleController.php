@@ -30,10 +30,10 @@ class RoleController extends CrudController
         return $this->handleSharedMessage($this->service->permissions());
     }
     public function test (){
-     //   $className = config('metric.'.$type);
-      //  $model = app(ucfirst('App\Models\EventUser'));
+     // $className = config('metric.'.$type);
+       $model = app(ucfirst('App\Models\EventUser'));
 
-    //  return  $model->first()->getName();
+     return  $model->first();
 
       $ss =new    MetricService(new MetricRepository(new Metric));
      return $ss->getAllPreDefinedMetric(15,5);
