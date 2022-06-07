@@ -29,8 +29,10 @@ class VolunteerFilter implements Filter
                 });
             else if ($value == "false")
                 $builder->whereHas('users', function ($query){
-                    $query->where('user_id', Auth::id())->where('status', '!=', EventUser::ACCEPTED_STATUS)
-                        ->orWhere('user_id', '!=', Auth::id());
+                    $query->where('user_id', Auth::id())->where('status', '!=', EventUser::ACCEPTED_STATUS);
+                })
+                ->orwhereHas('users', function ($query){
+                    $query->where('user_id', '!=', Auth::id());
                 });
         }
     }

@@ -6,9 +6,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\AuthController;
 use App\Http\Controllers\Dashboard\JoinRequestController;
-use App\Http\Controllers\Dashboard\EventController;
+use App\Http\Controllers\Dashboard\EventController as EventCrudController;
+use App\Http\Controllers\Dashboard\Event\EventController;
 use App\Http\Controllers\Dashboard\UserController;
-use App\Http\Controllers\Dashboard\MetricController;
+use App\Http\Controllers\Dashboard\Metric\MetricCrudController;
+use App\Http\Controllers\Dashboard\Metric\MetricController;
 use App\Http\Controllers\Dashboard\PostController;
 
 
@@ -96,18 +98,28 @@ Route::prefix('dashboard')->group(function () {
         Route::patch('join-requests/change-status/{id}', [JoinRequestController::class, 'changeRequestStatus']);
 
         Route::resource('join-requests', JoinRequestController::class);
-        Route::resource('events', EventController::class);
+
+
+        Route::get('events/remove-user', [EventController::class, 'removeUserFromEvent']);
+        Route::get('events/change-user-role', [EventController::class, 'changeUserRoleStatus']);
+        Route::resource('events', EventCrudController::class);
+
+
 
         Route::apiResource('notifications', NotificationCrudController::class);
 
         //StartMetric Routes.
 
-        Route::apiResource('metrics', MetricController::class);
+        Route::apiResource('metrics', MetricCrudController::class);
+
+        Route::get('metric/metrics-event-user', [MetricController::class, 'getEventUserMetricValues']);
+
+        //End Metric Routes.
 
         //Categories Routes.
         Route::apiResource('categories', CategoryController::class);
 
-        //End Metric Routes.
+
 
         Route::apiResource('metricQuery', \App\Http\Controllers\Dashboard\MetricQueryController::class);
         // ahmad
@@ -131,7 +143,7 @@ Route::prefix('dashboard')->group(function () {
         Route::get('badgeUsers/{badge}', [BadgeController::class, 'usersEarnedBadge']);
         Route::apiResource('metricConfiguration', \App\Http\Controllers\Dashboard\EventMetricConfigurationController::class);
 
-        Route::get('event/end/{event}', [EventController::class, 'eventEnd']);
+        Route::get('event/end/{event}', [EventCrudController::class, 'eventEnd']);
 
         Route::get('test', [RoleController::class, 'test']);
 

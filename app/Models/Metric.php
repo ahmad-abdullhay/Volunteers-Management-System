@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Metric\MetricEventValue;
 use App\Models\Metric\EventMetricConfiguration;
 use App\Models\Metric\MetricEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -40,5 +41,10 @@ class Metric extends BaseModel
             $type == Metric::STRING_LIST_TYPE ||
             $type == Metric::INTEGER_LIST_TYPE ||
             $type == Metric::ENUM_LIST_TYPE;
+    }
+
+    public function values()
+    {
+        return $this->hasMany(MetricEventValue::class, 'metric_id');
     }
 }

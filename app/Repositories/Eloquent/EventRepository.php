@@ -41,4 +41,24 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
            $query->where('status', $status);
         })->first();
     }
+
+    public function removeUserFromEvent($params)
+    {
+        $eventId = $params['event_id'];
+        $event = $this->findById($eventId);
+
+        $userId = $params['user_id'];
+        $event->users()->detach($userId);
+
+        return $userId;
+    }
+
+    public function changeUserRoleStatus($params)
+    {
+        $eventUserRelations = EventUser::where('user_id', $params['user_id'])->where('event_id', $params['event_id'])->first();
+        $eventUserRelations->is_supervisor = !$eventUserRelations->is_supervisor;
+        $eventUserRelations->save();
+
+        return $params['user_id'];
+    }
 }

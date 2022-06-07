@@ -9,6 +9,7 @@ use App\Models\Metric\MetricEnum;
 use App\Models\Metric\MetricEventValue;
 use App\Repositories\MetricRepositoryInterface;
 use App\Services\MetricService;
+use Hamcrest\Core\EveryTest;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -137,6 +138,50 @@ class MetricRepository extends BaseRepository implements MetricRepositoryInterfa
         }
         return $metricsList;
      //   return MetricEventValue::where('user_id', $userId)->where('event_id', $eventId)->get();
+    }
+
+    public function getUserMetricValues($params)
+    {
+        $userId = $params['user_id'];
+        $eventId = $params['event_id'];
+
+        $event = Event::select('id')->where('id',$eventId)->without(['categories', 'media', 'users'])->with(['metrics' => function($query) use($userId){
+            $query->with(['values' => function($query) use ($userId){
+                $query->where('user_id', $userId);
+            }]);
+        }])->first();
+
+        $metricData = [];
+
+        foreach ($event['metrics'] as $metric){
+            $values = [];
+            foreach ($metric['values'] as $value){
+                $values[] = $value->value;
+            }
+
+            $metricData[] = [
+                'name' => $metric->name,
+                'type' => $metric->type,
+                'values' => $values
+            ];
+        }
+
+        $returnedObject = [
+            'oneValue'  => [],
+            'listValue' =>[]
+        ];
+
+        foreach ($metricData as $metric){
+            //Check if metric is one value (Not list).
+
+            if ($metric['type'] %2 == 1){
+                array_push($returnedObject['oneValue'], $metric);
+            }else{
+                array_push($returnedObject['listValue'], $metric);
+            }
+        }
+        return $returnedObject;
+
     }
 
     public function getEventMetricsWithConfiguration($event)

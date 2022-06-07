@@ -1,5 +1,5 @@
 <?php
 
 return [
-    1 =>  'Status Pending'
+    'user-removed' => 'The Volunteer has been removed perfectly.'
 ];
