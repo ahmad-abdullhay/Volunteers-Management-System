@@ -61,4 +61,10 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
 
         return $params['user_id'];
     }
+
+    public function changEventStatus(Event $event, $payload)
+    {
+        $event->status = $payload['status'];
+        $event->save();
+    }
 }

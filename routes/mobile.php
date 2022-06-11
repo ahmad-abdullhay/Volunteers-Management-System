@@ -32,7 +32,7 @@ Route::group(['middleware' => ['auth:sanctum', 'type.user']], function (){
 
     Route::get("user/mail-category",[UserController::class,"getMailCategories"]);
 
-    Route::resource('mail', MailController::class);
+   // Route::resource('mail', MailController::class);
 
     Route::get('mail/get-by-category/{category_id}', [MailController::class,"getByUserIdWithCategoryId"]);
 

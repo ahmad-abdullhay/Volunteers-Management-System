@@ -25,19 +25,21 @@ class UserSeeder extends Seeder
             "location"=> "Mazzeh gabal",
             "job" => "مصمم",
             "volunteering_history"=> "TESTING",
-            "is_active" => 1
+            "is_active" => 1,
+            "password"=>"123123"
         ]);
         //User::factory(10)->create();
         User::create([
             "name"=> "حسان كريم الدين",
            "email" => "hassan2@3km.com",
              "date_of_birth"=> "2022-04-19",
-             "phone"=> "+9639375801812",
+             "phone"=> "+963123456780",
                 "gender"=> 1,
                 "location"=> "Mazzeh gabal",
                 "job" => "مهندس",
                 "volunteering_history"=> "TESTING",
-            "is_active" => 1
+            "is_active" => 1,
+            "password"=>"123123"
         ]);
 
         User::create([
@@ -49,7 +51,8 @@ class UserSeeder extends Seeder
             "location"=> "Mazzeh gabal",
             "job" => "مدير",
             "volunteering_history"=> "TESTING",
-            "is_active" => 1
+            "is_active" => 1,
+            "password"=>"123123"
         ]);
     }
 }

@@ -13,6 +13,7 @@ use App\Services\EventService;
 use App\Services\MetricService;
 use App\Services\PointRuleService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class EventController extends CrudController
 {
@@ -43,4 +44,5 @@ class EventController extends CrudController
             $this->eventService->eventEnd($event,$service,$badgeConditionService,$badgeService,$metricService);
 
     }
+
 }

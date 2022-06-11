@@ -194,4 +194,21 @@ class EventService extends BaseService
             200
         );
     }
+
+    public function changeEventStatus(Event $event,$payload,PointRuleService $service, BadgeConditionService $badgeConditionService,
+                                      BadgeService $badgeService, MetricService $metricService)
+    {
+        if ($payload['status'] == 3){
+            $this->eventEnd( $event,$service,  $badgeConditionService,
+                              $badgeService,  $metricService);
+        }
+        $this->repository->changEventStatus ( $event,$payload);
+        return new SharedMessage(__('event.status-changed'),
+         true,
+            true,
+            null,
+            200
+        );
+
+    }
 }

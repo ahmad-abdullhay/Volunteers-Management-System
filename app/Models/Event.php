@@ -12,11 +12,11 @@ class Event extends BaseModel implements HasMedia
 {
     use InteractsWithMedia;
 
-    const ESTABLISHING_STATUS = 0;
-    const RECRUITING_STATUS = 1;
-    const IN_PROGRESS_STATUS = 2;
-    const ENDED_STATUS = 3;
-    const ARCHIVED_STATUS = 4;
+  //  const ESTABLISHING_STATUS = 0;
+    const RECRUITING_STATUS = 0;
+    const IN_PROGRESS_STATUS = 1;
+    const ENDED_STATUS = 2;
+    const ARCHIVED_STATUS = 3;
     const PAUSED_STATUS = 5;
     const ABORTED_STATUS = 6;
 

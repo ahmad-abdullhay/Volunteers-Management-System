@@ -22,15 +22,15 @@ class EventObserver
      */
     public function updated(Event $event)
     {
-        if($event->isDirty('status')){
-            $users = $event->acceptedUsers;
-            $userIds = $users->pluck('id')->toArray();
-
-            $this->notificationService->sendNotificationsToUsers(
-                $userIds,
-                Notification::NOTIFICATION_EVENT_TYPE,
-                $event->id);
-        }
+//        if($event->isDirty('status')){
+//            $users = $event->acceptedUsers;
+//            $userIds = $users->pluck('id')->toArray();
+//
+//            $this->notificationService->sendNotificationsToUsers(
+//                $userIds,
+//                Notification::NOTIFICATION_EVENT_TYPE,
+//                $event->id);
+//        }
     }
 
 }

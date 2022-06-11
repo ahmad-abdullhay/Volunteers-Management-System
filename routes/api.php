@@ -99,6 +99,7 @@ Route::prefix('dashboard')->group(function () {
 
         Route::resource('join-requests', JoinRequestController::class);
 
+        Route::patch('event/changeStatus/{event}', [EventController::class, 'changeEventStatus']);
 
         Route::get('events/remove-user', [EventController::class, 'removeUserFromEvent']);
         Route::get('events/change-user-role', [EventController::class, 'changeUserRoleStatus']);
@@ -145,6 +146,8 @@ Route::prefix('dashboard')->group(function () {
 
         Route::get('event/end/{event}', [EventCrudController::class, 'eventEnd']);
 
+
+
         Route::get('test', [RoleController::class, 'test']);
 
 
@@ -157,7 +160,7 @@ Route::prefix('dashboard')->group(function () {
         Route::resource('mail-categories', MailCategoryController::class);
 
 
-        Route::resource('mail', MailController::class);
+     //   Route::resource('mail', MailController::class);
         Route::get('mail/get-by-category/{category_id}', [MailController::class,"getByAdminIdWithCategoryId"]);
 
 
