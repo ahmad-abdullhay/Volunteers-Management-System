@@ -10,6 +10,7 @@ use App\Models\EventMetric;
 use App\Models\EventUser;
 use App\Models\EventUserRating;
 use App\Models\Metric\BadgeCondition;
+use App\Models\Metric\EventPointStats;
 use App\Models\Metric\MetricQuery;
 use App\Models\Metric\PointRule;
 use App\Models\Metric\UserPoint;
@@ -100,6 +101,7 @@ class EventService extends BaseService
                              BadgeService $badgeService, MetricService $metricService)
     {
         $metricService->onEventEnding($event, $service, $badgeConditionService, $badgeService);
+        $metricService->eventPointsStatCalculate($event);
     }
 
     public function getEventEndReport(Event $event)
@@ -112,10 +114,9 @@ class EventService extends BaseService
                 'couldRate' => $hasRate < 1];
         }
 
-     //   $userId = 5;
         $userPoints = UserPoint::where('event_id', $event->id)->where('user_id', $userId)->where('points' ,'>',0)->get();
         $badgeUser = BadgeUser::where('event_id', $event->id)->where('user_id', $userId)->with('badge')->get();
-
+        $pointStats = EventPointStats::where ('event_id', $event->id)->where('user_id', $userId)->first();
         $status = 1;
         $endedEventCount = Event::where('status', 3)->with('users', function ($query) use ($status, $userId) {
             $query->where('status', $status)->where("user_id", $userId);
@@ -135,10 +136,12 @@ class EventService extends BaseService
                 "info" => $isSupervisor]
         ];
 
+
         return [
             "event info" => $eventInfo,
             "points" => $userPoints,
-            "badges" => $badgeUser];
+            "badges" => $badgeUser,
+            "pointStats"=>$pointStats];
     }
     public function view(int $id, array $columns = ['*'], array $relations = [], array $appends = [])
     {

@@ -29,5 +29,10 @@ class MetricQueryService extends BaseService
         return $this->repository->create($payload);
     }
 
-
+    public function newLeaderboardMetricQuery ($payload)
+    {
+        $payload['compare_operation'] = 'null';
+        $payload['compare_value'] = -1;
+        return $this->repository->create($payload);
+    }
 }

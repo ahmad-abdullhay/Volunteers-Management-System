@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Dashboard\LeaderboardController;
+use App\Http\Controllers\Dashboard\LevelController;
 use App\Http\Controllers\Dashboard\MetricQueryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -81,6 +83,8 @@ Route::prefix('dashboard')->group(function () {
         Route::get("check-token",[AdminCrudController::class,"CheckToken"]);
 
 
+
+
         Route::get('me', [AuthController::class, 'me']);
 
         // Start Roles && Permissions.
@@ -134,7 +138,7 @@ Route::prefix('dashboard')->group(function () {
         Route::post('newBadge', [BadgeController::class, 'newBadge']);
         Route::get('getMetricsOperations', [MetricQueryController::class, 'getMetricsOperations']);
 
-        Route::get('metric/get-event-metrics/{event}', [MetricController::class, 'getEventMetrics']);
+        Route::get('metric/get-event-metrics/{event}', [\App\Http\Controllers\Mobile\MetricController::class, 'getEventMetrics']);
 
         Route::get('metric/metrics-event-user', [MetricController::class, 'getEventUserMetricValues']);
         //
@@ -146,7 +150,8 @@ Route::prefix('dashboard')->group(function () {
 
         Route::get('event/end/{event}', [EventCrudController::class, 'eventEnd']);
 
-
+        Route::resource('levels', LevelController::class);
+        Route::get('levelVolunteer/{level}', [LevelController::class, 'levelsVolunteer']);
 
         Route::get('test', [RoleController::class, 'test']);
 
@@ -173,7 +178,10 @@ Route::prefix('dashboard')->group(function () {
 
         Route::get("admin/mail-category",[AdminCrudController::class,"getMailCategories"]);
 
+        Route::post('newLeaderboardTable', [LeaderboardController::class, 'newTable']);
+        Route::get('leaderboardsVolunteers', [LeaderboardController::class, 'tableVolunteers']);
 
+        Route::apiResource('leaderboard', LeaderboardController::class);
 
     });
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Mobile\EventUserRatingController;
+use App\Http\Controllers\Mobile\LeaderboardController;
 use App\Models\EventUserRating;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Mobile\AuthController;
@@ -71,6 +72,7 @@ Route::group(['middleware' => ['auth:sanctum', 'type.user']], function (){
     //End Event Routes.
     Route::get('badges', [BadgeController::class, 'index']);
 
+    Route::get('leaderboardsVolunteers', [LeaderboardController::class, 'tableVolunteers']);
 
     // -- Start Notifications --
 

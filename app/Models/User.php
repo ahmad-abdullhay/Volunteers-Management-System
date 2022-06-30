@@ -45,7 +45,7 @@ class User extends BaseModel implements
     protected $guard_name = 'users';
 
     protected $guarded = [];
-
+    protected $appends = ['level'];
 
     protected array $filterables = [
         StatusFilter::class
@@ -90,5 +90,12 @@ class User extends BaseModel implements
     public function totalPoints ()
     {
         return $this->hasOne(UserTotalPoints::class);
+    }
+    public function getLevelAttribute ()
+    {
+       $points =  $this->hasOne(UserTotalPoints::class)->first();
+       if ($points == null)
+           return null;
+        return  Level::orderBy('min_points','DESC')->where('min_points','<',$points->total_points)-> first();
     }
 }

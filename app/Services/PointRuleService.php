@@ -37,10 +37,6 @@ class PointRuleService extends BaseService
         $userList =  EventUser::select('user_id',)
             ->where('event_id', $event->id)
             ->where('status', "1")->get();
-        //$userList =   $event->with('users')->get()->first();
-
-     //   return $userList['users'];
-
         foreach ($userList as &$user){
             // get metrics list
             $valuesList = $metricService->getOneEventMetric($metricQuery->metric_id,$user->user_id,$event->id);
@@ -51,11 +47,10 @@ class PointRuleService extends BaseService
             $result =  $this->metricOperations->doOperation($metricQuery->first_operation,$valuesList[0]);
 
             $points = $result * $pointRule->points;
-            $myfile = fopen("newfile3.txt",  "a") or die("Unable to open file!");
-            $txt = json_encode($points);
-            fwrite($myfile, $txt);
-            fclose($myfile);
+            if ($points > 0)
             $this->repository->addPointsToUserFromPointRule( $pointRule->id,$event->id,$user->user_id,$points,$pointRule->rule_name);
+
+
         }
     }
 }

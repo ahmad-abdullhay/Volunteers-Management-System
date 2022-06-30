@@ -45,6 +45,5 @@ class PointRuleRepository extends BaseRepository implements PointRuleRepositoryI
         $totalPoints-> total_points+=$points;
         $totalPoints->update();
         }
-
     }
 }

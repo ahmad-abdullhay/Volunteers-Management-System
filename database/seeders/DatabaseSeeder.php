@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(BadgeSeeder::class);
         $this->call(PointRuleSeeder::class);
         $this->call(MailSeeder::class);
+        $this->call(LevelsSeeder::class);
 
     }
 }

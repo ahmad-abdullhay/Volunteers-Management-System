@@ -27,7 +27,7 @@ class MetricController extends BaseController
     public function getEventMetrics(Event $event)
     {
         return $this->handleSharedMessage(
-          $this->metricService->getEventMetrics($event)
+          $this->metricService->getEventMetricsWithConfiguration($event)
         );
     }
 

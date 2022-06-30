@@ -8,9 +8,12 @@ use App\Models\Event;
 use App\Models\EventMetric;
 use App\Models\Metric;
 use App\Models\Metric\BadgeCondition;
+use App\Models\Metric\EventPointStats;
 use App\Models\Metric\MetricEventValue;
 use App\Models\Metric\MetricQuery;
 use App\Models\Metric\PointRule;
+use App\Models\Metric\UserPoint;
+use App\Models\User;
 use App\Repositories\Eloquent\MetricRepository;
 use App\Services\Shared\BaseService;
 
@@ -18,9 +21,10 @@ class MetricService extends BaseService
 {
     protected string $modelName = "Metric";
     protected $repository;
-
-    public function __construct(MetricRepository $repository)
+    protected MetricOperations $metricOperations;
+    public function __construct(MetricRepository $repository,MetricOperations $metricOperations)
     {
+        $this->metricOperations = $metricOperations;
         $this->repository = $repository;
         parent::__construct($repository);
     }
@@ -165,14 +169,53 @@ class MetricService extends BaseService
         }
         return false;
     }
+    public function eventPointsStatCalculate (Event  $event)
+    {
+        $userPoints =
+        UserPoint::Where('event_id', $event->id)
+            ->selectRaw("SUM(points) as sum,user_id")
+            ->groupBy('user_id')
+            ->get();
+        foreach ($userPoints as $userP)
+        {
+            $userTotalPoints = Metric\UserTotalPoints::where('user_id',$userP->user_id)->first();
+            $stats = new EventPointStats;
+            $stats->points_before =$userTotalPoints->total_points - $userP->sum;
+            $stats->points_added = $userP->sum;
+            $stats->user_id = $userP->user_id;
+            $stats->event_id = $event->id;
+            $stats->save();
+        }
+
+    }
+    public function allEventOperation ($query,$user){
+        $valuesListList = $this->getAllEventMetric($query->metric_id,$user->id);
+        $json = json_encode(array('data' => $valuesListList));
+        file_put_contents("data.json", $json);
+        if (empty($valuesListList))
+            return null;
+        // do first operation for inners arrays
+        $resultList = [];
+        foreach ($valuesListList as &$valueList) {
+            $result = $this->metricOperations->doOperation($query->first_operation, $valueList);
+            array_push($resultList, $result);
+        }
+        // do second operation for outer array (results array)
+        $finalResult = $this->metricOperations->doOperation($query->second_operation, $resultList);
+
+        return $finalResult;
+    }
 
     public function getAllEventMetric($metricId, $userId)
     {
 
         $metric = Metric::where('id', $metricId)->first();
+        if ($metric->class != null){
+                return $this->getAllPreDefinedMetric($metric->id,$userId);
+        }
         $metricType = $metric->type;
         $className = config('metric.' . $metricType);
-        $eventsId = Event::where ('status',2)->pluck('id')->toArray();;
+        $eventsId = Event::where ('status',3)->pluck('id')->toArray();;
 
         $metrics = MetricEventValue::select('event_id', 'metric_value_type_id', 'valuable_type')
             ->whereIn("event_id",$eventsId)
@@ -236,15 +279,16 @@ class MetricService extends BaseService
 
          return [$eventValues];
     }
-    public function getAllPreDefinedMetric ($metric, $userId)
+    public function getAllPreDefinedMetric ($metricId, $userId)
     {
-        $metric = Metric::where('id', $metric)->first();
+        $metric = Metric::where('id', $metricId)->first();
         $model = app(ucfirst($metric->class));
-        $eventsId = Event::where ('status',2)->pluck('id')->toArray();;
+        $eventsId = Event::where ('status',3)->pluck('id')->toArray();;
+
         $events = $model->whereIn("event_id",$eventsId)->where('user_id',$userId)->get()->groupBy(['event_id']);
-    //    return $events;
         $arrays = [];
         foreach ($events as &$event ) {
+
             $eventValues = [];
             foreach ($event as $value){
                 if ($value->getValue() !== null)
@@ -253,6 +297,7 @@ class MetricService extends BaseService
             if (count($eventValues) > 0)
             array_push($arrays,$eventValues);
         }
+
         return $arrays;
     }
     public function getOneEventMetricWithDate($metricId, $userId, $eventId)
