@@ -6,6 +6,7 @@ use App\Http\Controllers\CrudController;
 use App\Http\Requests\RoleRequest;
 use App\Models\EventUser;
 use App\Models\Metric;
+use App\Models\PreMetric;
 use App\Repositories\Eloquent\MetricRepository;
 use App\Services\MetricService;
 use App\Services\RoleService;
@@ -31,10 +32,13 @@ class RoleController extends CrudController
     }
     public function test (){
      // $className = config('metric.'.$type);
-       $model = app(ucfirst('App\Models\EventUser'));
+       $model = app(ucfirst('App\Models\QuestionnaireUser'));
 
-     return  $model->first();
-
+        if ($model->isWithEvent()) {
+            dd("hoi");
+        } else {
+            dd("no");
+        }
       $ss =new    MetricService(new MetricRepository(new Metric));
      return $ss->getAllPreDefinedMetric(15,5);
 

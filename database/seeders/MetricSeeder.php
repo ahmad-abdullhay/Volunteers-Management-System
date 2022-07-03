@@ -77,6 +77,12 @@ class MetricSeeder extends Seeder
             "enum_value" => "المحبوب",
             "metric_id"=>7
         ]);
+        Metric::create([
+            "name"=>"اتمام استبيان",
+            "description"=> "ملء المتطوع لاستبيان من الجمعية",
+            "type"=> 1,
+            "class" => "App\Models\QuestionnaireUser"
+        ]);
     }
     public function addRateEnums ($metric_id)
     {

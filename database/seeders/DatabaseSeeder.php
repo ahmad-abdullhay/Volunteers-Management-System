@@ -25,6 +25,9 @@ class DatabaseSeeder extends Seeder
         $this->call(PointRuleSeeder::class);
         $this->call(MailSeeder::class);
         $this->call(LevelsSeeder::class);
+        $this->call(QuestionnaireSeeders::class);
+        $this->call(LeaderboardSeeder::class);
+
 
     }
 }

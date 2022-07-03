@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Mobile\EventUserRatingController;
 use App\Http\Controllers\Mobile\LeaderboardController;
+use App\Http\Controllers\Mobile\QuestionnaireController;
 use App\Models\EventUserRating;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Mobile\AuthController;
@@ -73,6 +74,18 @@ Route::group(['middleware' => ['auth:sanctum', 'type.user']], function (){
     Route::get('badges', [BadgeController::class, 'index']);
 
     Route::get('leaderboardsVolunteers', [LeaderboardController::class, 'tableVolunteers']);
+
+
+    //
+    Route::get('questionnaire', [QuestionnaireController::class, 'getAll']);
+
+    Route::post('fullQuestionnaire/{questionnaire}', [QuestionnaireController::class, 'fillQuestionnaire']);
+
+
+    // temp
+    Route::patch('event/tempChangeStatus/{event}', [EventController::class, 'tempChangeEventStatus']);
+
+    //
 
     // -- Start Notifications --
 

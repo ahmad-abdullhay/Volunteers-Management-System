@@ -13,8 +13,11 @@ use App\Models\Metric\MetricEventValue;
 use App\Models\Metric\MetricQuery;
 use App\Models\Metric\PointRule;
 use App\Models\Metric\UserPoint;
+use App\Models\PreMetric;
+use App\Models\Questionnaire;
 use App\Models\User;
 use App\Repositories\Eloquent\MetricRepository;
+use App\Repositories\Eloquent\PreDefinedMetricRepository;
 use App\Services\Shared\BaseService;
 
 class MetricService extends BaseService
@@ -22,10 +25,20 @@ class MetricService extends BaseService
     protected string $modelName = "Metric";
     protected $repository;
     protected MetricOperations $metricOperations;
-    public function __construct(MetricRepository $repository,MetricOperations $metricOperations)
+    protected PreDefinedMetricRepository $preDefinedMetricRepository;
+protected PointRuleService $pointRuleService;
+protected  BadgeConditionService $badgeConditionService;
+protected BadgeService $badgeService;
+    public function __construct(MetricRepository $repository,MetricOperations $metricOperations,
+                                PreDefinedMetricRepository $preDefinedMetricRepository,PointRuleService $pointRuleService,
+                                BadgeConditionService $badgeConditionService, BadgeService $badgeService)
     {
         $this->metricOperations = $metricOperations;
         $this->repository = $repository;
+        $this->preDefinedMetricRepository =$preDefinedMetricRepository;
+        $this->pointRuleService =$pointRuleService;
+        $this->badgeConditionService =$badgeConditionService;
+        $this->badgeService =$badgeService;
         parent::__construct($repository);
     }
     public function store($payload): SharedMessage
@@ -144,13 +157,49 @@ class MetricService extends BaseService
             }
         }
     }
+    public function onQuestionnaireFilling(Questionnaire $questionnaire, )
+    {
+
+        $metricsList = Metric::where('class', "App\Models\QuestionnaireUser")->get();
+
+        // this list to store processed badge (to not process it again)
+        $badgeList = [];
+        foreach ($metricsList as &$metric) {
+
+            // get all queries linked to this metric
+            $queryList = MetricQuery::where('metric_id', $metric->id)->get();
+
+            foreach ($queryList as &$query) {
+
+                // check if query is for point rule
+                if ($this->pointRulesCheck($query, $this->pointRuleService, null)) {
+                    continue;
+                }
+
+                // check if query is for badge condition
+                if ($this->badgeConditionCheck($query, $badgeList, $this->badgeConditionService, $this->badgeService, null)) {
+                    continue;
+                }
+
+            }
+        }
+    }
 
     public function pointRulesCheck($query,PointRuleService $pointRuleService, $event)
     {
         $pointRule = PointRule::where('metrics_query_id', $query->id)->first();
+        $myfile = fopen("pre.txt", "w") or die("Unable to open file!");
+        $myJSON=json_encode($pointRule);
+        fwrite($myfile, $myJSON);
+        fclose($myfile);
         if ($pointRule != null) {
 
-            $pointRuleService->apply($event, $pointRule, $query, $this);
+
+            if ($event == null){
+                $pointRuleService->applyNonEvent( $pointRule, $query, $this);
+            } else {
+                $pointRuleService->apply($event, $pointRule, $query, $this);
+            }
             return true;
         }
         return false;
@@ -163,7 +212,12 @@ class MetricService extends BaseService
             $badge = Badge::where('id', $BadgeCondition->badge_id)->first();
             if ($badge != null && !in_array($badge->id, $badgeList)) {
                 array_push($badgeList, $badge->id);
-                $badgeConditionService->apply($event, $badge, $badgeService, $this);
+                if ($event != null){
+                    $badgeConditionService->apply($event, $badge, $badgeService, $this);
+                } else {
+                    $badgeConditionService->applyNonEvent( $badge, $badgeService, $this);
+                }
+
                 return true;
             }
         }
@@ -211,7 +265,8 @@ class MetricService extends BaseService
 
         $metric = Metric::where('id', $metricId)->first();
         if ($metric->class != null){
-                return $this->getAllPreDefinedMetric($metric->id,$userId);
+
+                return $this->preDefinedMetricRepository->getAllPreDefinedMetric($metric->id,$userId);
         }
         $metricType = $metric->type;
         $className = config('metric.' . $metricType);
@@ -241,10 +296,9 @@ class MetricService extends BaseService
 
     public function getOneEventMetric($metricId, $userId, $eventId)
     {
-
         $metric = Metric::where('id', $metricId)->first();
         if ($metric->class != null){
-            return $this->getOneEventPreDefinedMetric($metric,$userId, $eventId);
+            return $this->preDefinedMetricRepository->getOneEventPreDefinedMetric($metric,$userId, $eventId);
         }
         $metricType = $metric->type;
         $className = config('metric.' . $metricType);
@@ -267,44 +321,11 @@ class MetricService extends BaseService
         }
         return $metricsArray;
     }
-    public function getOneEventPreDefinedMetric ($metric, $userId, $eventId)
-    {
-        $model = app(ucfirst($metric->class));
-         $values = $model->where('user_id',$userId)->where('event_id',$eventId)->get();
-        $eventValues = [];
-        foreach ($values as $value){
-            if ($value->getValue() !== null)
-                array_push($eventValues, $value->getValue());
-        }
 
-         return [$eventValues];
-    }
-    public function getAllPreDefinedMetric ($metricId, $userId)
-    {
-        $metric = Metric::where('id', $metricId)->first();
-        $model = app(ucfirst($metric->class));
-        $eventsId = Event::where ('status',3)->pluck('id')->toArray();;
-
-        $events = $model->whereIn("event_id",$eventsId)->where('user_id',$userId)->get()->groupBy(['event_id']);
-        $arrays = [];
-        foreach ($events as &$event ) {
-
-            $eventValues = [];
-            foreach ($event as $value){
-                if ($value->getValue() !== null)
-                    array_push($eventValues, $value->getValue());
-            }
-            if (count($eventValues) > 0)
-            array_push($arrays,$eventValues);
-        }
-
-        return $arrays;
-    }
     public function getOneEventMetricWithDate($metricId, $userId, $eventId)
     {
 
         $metric = Metric::where('id', $metricId)->first();
-
         $metricType = $metric->type;
         $className = config('metric.' . $metricType);
         $metrics = MetricEventValue::select('event_id', 'metric_value_type_id', 'valuable_type')

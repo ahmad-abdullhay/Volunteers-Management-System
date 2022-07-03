@@ -6,7 +6,11 @@ use App\Http\Controllers\BaseController;
 use App\Http\Requests\Mobile\Event\SuperVisorEventRequest;
 use App\Models\Event;
 use App\Models\EventUser;
+use App\Services\BadgeConditionService;
+use App\Services\BadgeService;
 use App\Services\EventService;
+use App\Services\MetricService;
+use App\Services\PointRuleService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,4 +61,13 @@ class EventController extends BaseController
     {
      return    $this->eventService->getEventEndReport($event);
     }
+    // temp
+    public function tempChangeEventStatus (Event $event,Request $request,PointRuleService $service, BadgeConditionService $badgeConditionService,
+                                       BadgeService $badgeService, MetricService $metricService)
+    {
+        // dd($request->post());
+        return $this-> handleSharedMessage ( $this->eventService->tempChangeEventStatus ($event,$request->query(),$service,  $badgeConditionService,
+            $badgeService,  $metricService));
+    }
+    //
 }

@@ -1,11 +1,6 @@
 <?php
 
 namespace App\Models;
-interface PreMetric {
-
-    public function getValue ();
-
-}
 class EventUser extends BaseModel implements PreMetric
 {
     const NOT_SUPERVISOR = 0;
@@ -34,4 +29,8 @@ class EventUser extends BaseModel implements PreMetric
     }
 
 
+    public static function isWithEvent(): bool
+    {
+       return true;
+    }
 }

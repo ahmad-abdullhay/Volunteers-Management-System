@@ -11,6 +11,7 @@ use App\Models\Metric\PointRule;
 use App\Models\Metric\UserPoint;
 use App\Repositories\Eloquent\PointRuleRepository;
 use App\Services\Shared\BaseService;
+use Illuminate\Support\Facades\Auth;
 
 class PointRuleService extends BaseService
 {
@@ -52,6 +53,23 @@ class PointRuleService extends BaseService
 
 
         }
+    }
+    public function  applyNonEvent (PointRule $pointRule,MetricQuery $metricQuery,MetricService $metricService){
+        $userId =  Auth::id();
+
+            // get metrics list
+            $valuesList = $metricService->getOneEventMetric($metricQuery->metric_id,$userId,null);
+
+            if (empty($valuesList)){
+                return;
+            }
+            //      dd($valuesList[0]);
+            $result =  $this->metricOperations->doOperation($metricQuery->first_operation,$valuesList[0]);
+
+            $points = $result * $pointRule->points;
+            if ($points > 0)
+                $this->repository->addPointsToUserFromPointRule( $pointRule->id,null,$userId,$points,$pointRule->rule_name);
+
     }
 }
 

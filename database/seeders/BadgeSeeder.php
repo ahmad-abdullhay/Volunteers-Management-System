@@ -91,5 +91,7 @@ public function run ()
         "badge_id"=>5,
         "metrics_query_id"=>5,
     ]);
+    // new new for questionnaire
+    // moved to point rules
 }
 }

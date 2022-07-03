@@ -14,6 +14,7 @@ use App\Models\Metric\PointRule;
 use App\Models\Metric\UserPoint;
 use App\Repositories\Eloquent\BadgeConditionRepository;
 use App\Services\Shared\BaseService;
+use Illuminate\Support\Facades\Auth;
 
 class BadgeConditionService extends BaseService
 {
@@ -54,11 +55,14 @@ class BadgeConditionService extends BaseService
                 $finalResult =  $this->doOperations($badgeCondition,$query,$metricService,$user,$event);
                 $isTrue =
                     $this->metricOperations->doCompare($query->compare_operation, $finalResult, $query->compare_value);
-//                $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-//                $myJSON=json_encode($isTrue);
-//                fwrite($myfile, $finalResult);
-//                fwrite($myfile, $myJSON);
-//                fclose($myfile);
+                if ($query->id == 3){
+                    $myfile = fopen("newfile3.txt", "w") or die("Unable to open file!");
+                    $myJSON=json_encode($finalResult);
+                    //      fwrite($myfile, $finalResult);
+                    fwrite($myfile, $myJSON);
+                    fclose($myfile);
+                }
+
                 }
                 // do compare
             if ($isTrue) {
@@ -68,6 +72,36 @@ class BadgeConditionService extends BaseService
 
         }
 
+    public function applyNonEvent( Badge $badge,BadgeService $badgeService,MetricService $metricService)
+    {
+        $userId =  Auth::id();
+
+        // all conditions to get the badge
+        $BadgeConditionList = BadgeCondition::where('badge_id', $badge->id)->get();
+
+
+
+            if ($badgeService->isUserHasBadge($userId,$badge->id))
+                return;
+
+            $isTrue = false;
+            foreach ($BadgeConditionList as &$badgeCondition) {
+                $query = MetricQuery::where('id', $badgeCondition->metrics_query_id)->first();
+                $finalResult =  $this->doOperations($badgeCondition,$query,$metricService,$userId,null);
+                $myfile = fopen("pre.txt", "w") or die("Unable to open file!");
+                $myJSON=json_encode($finalResult);
+                fwrite($myfile, $myJSON);
+                fclose($myfile);
+                $isTrue =
+                    $this->metricOperations->doCompare($query->compare_operation, $finalResult, $query->compare_value);
+            }
+            // do compare
+            if ($isTrue) {
+                $badgeService->automaticallyGiveBadgeToUser($userId,$badge->id,null,"from questionnaire");
+            }
+
+
+    }
     public function doOperations ($badgeCondition,$query,$metricService,$user,$event){
         // if query for the last event only
         if ($query->second_operation == "null") {
@@ -78,7 +112,10 @@ class BadgeConditionService extends BaseService
         }
     }
     public function oneEventOperation (MetricService $metricService,$query,$user,$event){
+        if ($event != null)
         $valuesList = $metricService->getOneEventMetric($query->metric_id,$user->user_id,$event->id);
+        else
+            $valuesList = $metricService->getOneEventMetric($query->metric_id,$user,null);
         if (empty($valuesList))
             return null;
         if ($query->first_operation == 'null'){
@@ -86,11 +123,19 @@ class BadgeConditionService extends BaseService
         }
 
         $finalResult = $this->metricOperations->doOperation($query->first_operation, $valuesList[0]);
+
         return $finalResult;
     }
 
     public function allEventOperation (MetricService $metricService,$query,$user){
-        $valuesListList = $metricService->getAllEventMetric($query->metric_id,$user->user_id);
+        if (is_int($user)){
+            $id = $user;
+        } else {
+            $id = $user->user_id;
+        }
+        $valuesListList = $metricService->getAllEventMetric($query->metric_id,$id);
+       // if ($query->id == 3)
+        //dd($user);
         if (empty($valuesListList))
             return null;
         // do first operation for inners arrays

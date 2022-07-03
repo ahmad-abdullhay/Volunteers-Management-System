@@ -3,6 +3,7 @@
 use App\Http\Controllers\Dashboard\LeaderboardController;
 use App\Http\Controllers\Dashboard\LevelController;
 use App\Http\Controllers\Dashboard\MetricQueryController;
+use App\Http\Controllers\Dashboard\QuestionnaireController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\RoleController;
@@ -183,6 +184,7 @@ Route::prefix('dashboard')->group(function () {
 
         Route::apiResource('leaderboard', LeaderboardController::class);
 
+        Route::get('questionnaire', [QuestionnaireController::class, 'getAll']);
     });
 
 });
