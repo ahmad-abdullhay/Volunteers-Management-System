@@ -83,7 +83,7 @@ Route::group(['middleware' => ['auth:sanctum', 'type.user']], function (){
 
 
     // temp
-    Route::patch('event/tempChangeStatus/{event}', [EventController::class, 'tempChangeEventStatus']);
+    Route::get('event/tempChangeStatus/{event}', [EventController::class, 'tempChangeEventStatus']);
 
     //
 
