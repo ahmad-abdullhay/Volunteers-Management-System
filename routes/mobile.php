@@ -85,6 +85,7 @@ Route::group(['middleware' => ['auth:sanctum', 'type.user']], function (){
     // temp
     Route::get('event/tempChangeStatus/{event}', [EventController::class, 'tempChangeEventStatus']);
 
+
     //
 
     // -- Start Notifications --
