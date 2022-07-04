@@ -183,6 +183,7 @@ protected BadgeService $badgeService;
 
             }
         }
+        return null;
     }
 
     public function pointRulesCheck($query,PointRuleService $pointRuleService, $event)
@@ -193,8 +194,6 @@ protected BadgeService $badgeService;
         fwrite($myfile, $myJSON);
         fclose($myfile);
         if ($pointRule != null) {
-
-
             if ($event == null){
                 $pointRuleService->applyNonEvent( $pointRule, $query, $this);
             } else {

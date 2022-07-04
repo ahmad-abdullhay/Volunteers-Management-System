@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Common\SharedMessage;
+use App\Models\Metric\EventPointStats;
+use App\Models\Metric\UserTotalPoints;
 use App\Models\Questionnaire;
 use App\Repositories\Eloquent\QuestionnaireRepository;
 use App\Repositories\Eloquent\RoleRepository;
@@ -37,17 +39,38 @@ class QuestionnaireService extends BaseService
             200
         );
     }
-    public function questionnaireFilling (Questionnaire $questionnaire)
+    public function questionnaireFilling (Questionnaire $questionnaire,$payload)
     {
+//                        $myfile = fopen("more.txt", "w") or die("Unable to open file!");
+//                $myJSON=json_encode($payload);
+//                fwrite($myfile, $myJSON);
+//                fclose($myfile);
         $userId =Auth::id();
         $this->repository->userQuestionnaireFilling ($questionnaire->id,$userId);
-        $this->metricService->onQuestionnaireFilling($questionnaire);
+       $result =  $this->metricService->onQuestionnaireFilling($questionnaire);
+
+
+
+
+
         return new SharedMessage(__('success.join-status-update'),
-            ["done" => true],
+            ["pointStats"=>$this->getQuestionnaireEnds($result)],
             true,
             null,
             200
         );
      //   return ["done" => true];
     }
+    public function getQuestionnaireEnds ($result)
+    {
+        $userId = Auth::id();
+        $totalPoints = UserTotalPoints::where('user_id', $userId)->first();
+        $stats = new EventPointStats;
+        $stats->points_before = $totalPoints->total_points - 10;
+        //$totalPoints -$result->points;
+        $stats->points_added =  10;
+        //$result->points;
+        return $stats;
+    }
+
 }

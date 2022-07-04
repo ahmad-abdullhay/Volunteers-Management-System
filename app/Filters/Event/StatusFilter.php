@@ -21,10 +21,7 @@ class StatusFilter implements Filter
 
         if ($value !== null){
             if ($value[0] == '!'){
-//                $myfile = fopen("more.txt", "w") or die("Unable to open file!");
-//                $myJSON=json_encode($value);
-//                fwrite($myfile, $myJSON);
-//                fclose($myfile);
+
                 $builder->where('status','!=', $value[1]);
             } else {
                 $builder->where('status', $value);

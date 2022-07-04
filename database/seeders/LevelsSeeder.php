@@ -18,13 +18,13 @@ public function run ()
         Level::create ([
             "level" => 2,
             "level_name" => 'المستوى الثاني',
-            "start_points" => 101,
+            "start_points" => 100,
             "min_points" => 200,
         ]);
         Level::create ([
             "level" => 3,
             "level_name" => 'المستوى الثالث',
-            "start_points" => 201,
+            "start_points" => 200,
             "min_points" => 300,
         ]);
     }

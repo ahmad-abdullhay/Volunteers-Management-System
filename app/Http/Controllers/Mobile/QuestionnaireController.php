@@ -9,6 +9,7 @@ use App\Http\Requests\RoleRequest;
 use App\Models\Questionnaire;
 use App\Services\QuestionnaireService;
 use App\Services\RoleService;
+use Illuminate\Http\Request;
 
 class QuestionnaireController extends CrudController
 {
@@ -28,8 +29,8 @@ class QuestionnaireController extends CrudController
     {
         return $this->handleSharedMessage($this->service->getAllForUser());
     }
-    public function fillQuestionnaire (Questionnaire $questionnaire)
+    public function fillQuestionnaire (Questionnaire $questionnaire,Request $request)
     {
-        return $this->handleSharedMessage($this->service->questionnaireFilling($questionnaire));
+        return $this->handleSharedMessage($this->service->questionnaireFilling($questionnaire,$request->post()));
     }
 }
