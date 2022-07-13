@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Common\SharedMessage;
+use App\Http\Requests\QuestionnaireRequest;
 use App\Models\Metric\EventPointStats;
 use App\Models\Metric\UserTotalPoints;
 use App\Models\Questionnaire;
@@ -15,9 +16,11 @@ class QuestionnaireService extends BaseService
 {
     protected string $modelName = "Questionnaire";
     protected MetricService $metricService;
-    public function __construct(QuestionnaireRepository $repository,MetricService $metricService)
+    protected InventoryService $inventoryService;
+    public function __construct(QuestionnaireRepository $repository,MetricService $metricService,InventoryService $inventoryService)
     {
         $this->metricService = $metricService;
+        $this->inventoryService = $inventoryService;
         parent::__construct($repository);
     }
 
@@ -28,6 +31,34 @@ class QuestionnaireService extends BaseService
             true,
             null,
             200
+        );
+    }
+
+    public function getUserWithFilter(Questionnaire $questionnaire,int $status): SharedMessage
+    {
+        if ($status == 0){
+            return new SharedMessage(__('success.list', ['model' => 'Permission']),
+                $this->repository->doneUsers($questionnaire->id), true, null, 200
+            );
+        }
+        if ($status == 1){
+            return new SharedMessage(__('success.list', ['model' => 'Permission']),
+                $this->repository->sentUsers($questionnaire->id), true, null, 200
+            );
+        }
+        if ($status == 2){
+            return new SharedMessage(__('success.list', ['model' => 'Permission']),
+                $this->repository->notSentUsers($questionnaire->id), true, null, 200
+            );
+        }
+        return new SharedMessage(__('success.list', ['model' => 'Permission']),
+            [], true, null, 200
+        );
+    }
+    public function sendQuestionnaire (Questionnaire $questionnaire)
+    {
+        return new SharedMessage(__('success.list', ['model' => 'Permission']),
+            $this->repository->sendQuestionnaireToNotSentUsers($questionnaire->id), true, null, 200
         );
     }
     public function getAllForUser(): SharedMessage
@@ -41,10 +72,9 @@ class QuestionnaireService extends BaseService
     }
     public function questionnaireFilling (Questionnaire $questionnaire,$payload)
     {
-//                        $myfile = fopen("more.txt", "w") or die("Unable to open file!");
-//                $myJSON=json_encode($payload);
-//                fwrite($myfile, $myJSON);
-//                fclose($myfile);
+
+        $this->inventoryService->setTraits($questionnaire->inventories,$payload);
+//
         $userId =Auth::id();
         $this->repository->userQuestionnaireFilling ($questionnaire->id,$userId);
        $result =  $this->metricService->onQuestionnaireFilling($questionnaire);
@@ -66,9 +96,9 @@ class QuestionnaireService extends BaseService
         $userId = Auth::id();
         $totalPoints = UserTotalPoints::where('user_id', $userId)->first();
         $stats = new EventPointStats;
-        $stats->points_before = $totalPoints->total_points - 10;
+        $stats->points_before = $totalPoints->total_points - $result;
         //$totalPoints -$result->points;
-        $stats->points_added =  10;
+        $stats->points_added =  $result;
         //$result->points;
         return $stats;
     }

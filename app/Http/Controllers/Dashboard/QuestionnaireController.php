@@ -6,6 +6,7 @@ use App\Http\Controllers\BaseController;
 use App\Http\Controllers\CrudController;
 use App\Http\Requests\QuestionnaireRequest;
 use App\Http\Requests\RoleRequest;
+use App\Models\Questionnaire;
 use App\Services\QuestionnaireService;
 use App\Services\RoleService;
 
@@ -26,5 +27,15 @@ class QuestionnaireController extends CrudController
     public function getAll ()
     {
         return $this->handleSharedMessage($this->service->getAll());
+    }
+
+    public function getUsers (Questionnaire $questionnaire,QuestionnaireRequest $request)
+    {
+        return $this->handleSharedMessage($this->service->getUserWithFilter($questionnaire,$request->query()['status']));
+    }
+    public function sendQuestionnaire (Questionnaire $questionnaire)
+    {
+        return $this->handleSharedMessage($this->service->sendQuestionnaire($questionnaire));
+
     }
 }

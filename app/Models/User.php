@@ -21,6 +21,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -40,12 +41,12 @@ class User extends BaseModel implements
     const ACTIVE_STATUS = 1;
     const INACTIVE_STATUS = 0;
 
-    protected $with = ['roles',"totalPoints"];
+    protected $with = ['roles',"totalPoints",'traitsValues'];
 
     protected $guard_name = 'users';
 
     protected $guarded = [];
-    protected $appends = ['level'];
+    protected $appends = ['level','personality'];
 
     protected array $filterables = [
         StatusFilter::class
@@ -93,9 +94,27 @@ class User extends BaseModel implements
     }
     public function getLevelAttribute ()
     {
-       $points =  $this->hasOne(UserTotalPoints::class)->first();
+       $points =  $this->totalPoints;
+       if ($this->id == 1){
+           $myfile = fopen("users.txt", "w") or die("Unable to open file!");
+           $myJSON=json_encode($points);
+           fwrite($myfile, $myJSON);
+           fclose($myfile);
+       }
+
        if ($points == null)
-           return null;
-        return  Level::orderBy('min_points','DESC')->where('min_points','<',$points->total_points)-> first();
+           return  Level::orderBy('min_points','DESC')->where('start_points','<=',0)-> first();
+       else
+        return  Level::orderBy('min_points','DESC')->where('start_points','<',$points->total_points)-> first();
     }
+
+    public function getPersonalityAttribute ()
+    {
+        return  Inventory::get();
+    }
+    public function traitsValues()
+    {
+        return $this->hasMany(TraitsUser::class,'user_id');
+    }
+
 }

@@ -6,6 +6,7 @@ use App\Models\Metric\PointRule;
 use App\Models\Metric\UserPoint;
 use App\Models\Questionnaire;
 use App\Models\QuestionnaireUser;
+use App\Models\User;
 
 class QuestionnaireRepository extends BaseRepository
 {
@@ -37,5 +38,38 @@ class QuestionnaireRepository extends BaseRepository
         $questionnaireUser->is_done = 1;
         $questionnaireUser->save();
 
+    }
+
+    public function sentUsers ($questionnaireId)
+    {
+        return QuestionnaireUser::where ("is_done" , 0)->where("questionnaire_id",$questionnaireId)->with('users')-> get();
+    }
+
+    public function notSentUsers ($questionnaireId)
+    {
+        return User::whereNotIn('id',QuestionnaireUser::select("user_id")->where("questionnaire_id",$questionnaireId))->get();
+    }
+
+    public function doneUsers ($questionnaireId)
+    {
+        return QuestionnaireUser::where ("is_done" , 1)->where("questionnaire_id",$questionnaireId)->with('users')-> get();
+
+    }
+    public function sendQuestionnaireToNotSentUsers ($questionnaireId)
+    {
+        $users = $this->notSentUsers($questionnaireId);
+        foreach ($users as $user)
+        {
+            $this->sendQuestionnaireToUser($user->id,$questionnaireId);
+        }
+        return ["count" => count($users)];
+    }
+    public function sendQuestionnaireToUser ($userId,$questionnaireId)
+    {
+        $questionnaireUser = new QuestionnaireUser;
+        $questionnaireUser->user_id = $userId;
+        $questionnaireUser->questionnaire_id = $questionnaireId;
+        $questionnaireUser->is_done = 0;
+        $questionnaireUser->save();
     }
 }

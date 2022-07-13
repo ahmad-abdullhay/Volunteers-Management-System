@@ -164,6 +164,7 @@ protected BadgeService $badgeService;
 
         // this list to store processed badge (to not process it again)
         $badgeList = [];
+        $points = null;
         foreach ($metricsList as &$metric) {
 
             // get all queries linked to this metric
@@ -172,7 +173,9 @@ protected BadgeService $badgeService;
             foreach ($queryList as &$query) {
 
                 // check if query is for point rule
-                if ($this->pointRulesCheck($query, $this->pointRuleService, null)) {
+                $value = $this->pointRulesCheck($query, $this->pointRuleService, null);
+                if ($value != null) {
+                    $points = $value;
                     continue;
                 }
 
@@ -183,25 +186,25 @@ protected BadgeService $badgeService;
 
             }
         }
-        return null;
+        return $points;
     }
 
     public function pointRulesCheck($query,PointRuleService $pointRuleService, $event)
     {
         $pointRule = PointRule::where('metrics_query_id', $query->id)->first();
-        $myfile = fopen("pre.txt", "w") or die("Unable to open file!");
-        $myJSON=json_encode($pointRule);
-        fwrite($myfile, $myJSON);
-        fclose($myfile);
+//        $myfile = fopen("pre.txt", "w") or die("Unable to open file!");
+//        $myJSON=json_encode($pointRule);
+//        fwrite($myfile, $myJSON);
+//        fclose($myfile);
         if ($pointRule != null) {
             if ($event == null){
-                $pointRuleService->applyNonEvent( $pointRule, $query, $this);
+              $points  =   $pointRuleService->applyNonEvent( $pointRule, $query, $this);
             } else {
                 $pointRuleService->apply($event, $pointRule, $query, $this);
             }
-            return true;
+            return $points;
         }
-        return false;
+        return null;
     }
 
     public function badgeConditionCheck($query, $badgeList, $badgeConditionService, $badgeService, $event)

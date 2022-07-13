@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string("title");
             $table->string("description");
             $table->integer("answersLimit");
+            $table->foreignId('inventory_id')
+                ->nullable();
             $table->timestamps();
         });
     }

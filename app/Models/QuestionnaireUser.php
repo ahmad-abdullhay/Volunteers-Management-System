@@ -15,4 +15,8 @@ class QuestionnaireUser extends BaseModel implements PreMetric
    {
         return false;
     }
+    public function users ()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

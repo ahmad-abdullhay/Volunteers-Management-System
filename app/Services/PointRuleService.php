@@ -61,15 +61,17 @@ class PointRuleService extends BaseService
             $valuesList = $metricService->getOneEventMetric($metricQuery->metric_id,$userId,null);
 
             if (empty($valuesList)){
-                return;
+                return null;
             }
             //      dd($valuesList[0]);
             $result =  $this->metricOperations->doOperation($metricQuery->first_operation,$valuesList[0]);
 
             $points = $result * $pointRule->points;
-            if ($points > 0)
+            if ($points > 0){
                 $this->repository->addPointsToUserFromPointRule( $pointRule->id,null,$userId,$points,$pointRule->rule_name);
-
+                return $points;
+            }
+return null;
     }
 }
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\InventoryController;
 use App\Http\Controllers\Dashboard\LeaderboardController;
 use App\Http\Controllers\Dashboard\LevelController;
 use App\Http\Controllers\Dashboard\MetricQueryController;
@@ -184,7 +185,14 @@ Route::prefix('dashboard')->group(function () {
 
         Route::apiResource('leaderboard', LeaderboardController::class);
 
+
+        Route::get('inventories', [InventoryController::class, 'getAll']);
+
+
         Route::get('questionnaire', [QuestionnaireController::class, 'getAll']);
+        Route::get('questionnaireUsers/{questionnaire}', [QuestionnaireController::class, 'getUsers']);
+        Route::post('sendQuestionnaire/{questionnaire}', [QuestionnaireController::class, 'sendQuestionnaire']);
+
     });
 
 });
