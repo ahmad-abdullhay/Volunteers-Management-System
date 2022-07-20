@@ -196,6 +196,7 @@ protected BadgeService $badgeService;
 //        $myJSON=json_encode($pointRule);
 //        fwrite($myfile, $myJSON);
 //        fclose($myfile);
+        $points = null;
         if ($pointRule != null) {
             if ($event == null){
               $points  =   $pointRuleService->applyNonEvent( $pointRule, $query, $this);
