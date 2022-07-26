@@ -23,9 +23,10 @@ class TraitsRepository extends BaseRepository
         $traitUser->value = $value;
         $traitUser->trait_id = $userId;
         $traitUser->save();
-//        $myfile = fopen("inven.txt", "w") or die("Unable to open file!");
-//        $myJSON=json_encode($traits);
-//        fwrite($myfile, $myJSON);
-//        fclose($myfile);
+
+    }
+    public function getAverage ()
+    {
+        TraitsUser::avg('value')->groupBy('trait_id')->get();
     }
 }

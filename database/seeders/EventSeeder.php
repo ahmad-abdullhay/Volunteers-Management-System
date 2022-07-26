@@ -28,7 +28,13 @@ class EventSeeder extends Seeder
             "start_date" => "2022-06-12",
             "required_volunteers_number" => 10,
             "end_date" => "2022-06-16",
-        ])->users()->attach($usersData);
+        ]);
+        EventUser::create([
+            'event_id' => 1,
+            'user_id' => 1,
+            'status' => 1,
+            'is_supervisor' => 1,
+        ]);
 
         EventMetric::create([
             "event_id" => 1,
@@ -74,7 +80,13 @@ class EventSeeder extends Seeder
             "required_volunteers_number" => 22,
             "end_date" => "2022-06-16",
 
-        ])->users()->attach($usersData);
+        ]);
+        EventUser::create([
+            'event_id' => 2,
+            'user_id' => 1,
+            'status' => 1,
+            'is_supervisor' => 1
+        ]);
         EventMetric::create([
             "event_id" => 2,
             "metric_id" => 1,
@@ -99,7 +111,13 @@ class EventSeeder extends Seeder
             "end_date" => "2022-06-16",
             "status" => 1
 
-        ])->users()->attach($usersData);
+        ]);
+        EventUser::create([
+            'event_id' => 3,
+            'user_id' => 1,
+            'status' => 1,
+            'is_supervisor' => 1
+        ]);
         EventUser::create([
             'event_id' => 3,
             'user_id' => 2,
@@ -186,7 +204,13 @@ class EventSeeder extends Seeder
             "end_date" => "2022-06-16",
             "status" => 1
 
-        ])->users()->attach($usersData);
+        ]);
+        EventUser::create([
+            'event_id' => 4,
+            'user_id' => 1,
+            'status' => 1,
+            'is_supervisor' => 1
+        ]);
         EventUser::create([
             'event_id' => 4,
             'user_id' => 2,
@@ -264,14 +288,7 @@ class EventSeeder extends Seeder
             "event_id" => 4,
             "category_id" => 2,
         ]);
-        $usersData = [];
-        $users = [2];
-        foreach ($users as $key => $user){
-            $usersData[$user] = [
-                'status' => 1,
-                'is_supervisor' => 1
-            ];
-        }
+
         Event::create([
             "name" => "فعالية الفلكي الصغير",
             "description" => "هدف الفعالية هو زيارة المدارس الابتدائية \n والقيام باعطاء حصص للطلاب عن علم الفلك \n وتوزيع هداية رمزية على الاطفال المشاركين",
@@ -280,8 +297,13 @@ class EventSeeder extends Seeder
             "end_date" => "2022-06-16",
             "status" => 0
 
-        ])->users()->attach($usersData);;
-
+        ]);
+        EventUser::create([
+            'event_id' => 5,
+            'user_id' => 2,
+            'status' => 1,
+            'is_supervisor' => 0
+        ]);
         EventUser::create([
             'event_id' => 5,
             'user_id' => 3,

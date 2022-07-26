@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Common\SharedMessage;
 use App\Models\Inventory;
+use App\Models\TraitsUser;
 use App\Repositories\Eloquent\InventoryRepository;
 use App\Services\Shared\BaseService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class InventoryService extends BaseService
 {
@@ -40,10 +42,6 @@ class InventoryService extends BaseService
     }
     public function doVFI (Inventory $inventory,$payload)
     {
-//                $myfile = fopen("inven.txt", "w") or die("Unable to open file!");
-//                $myJSON=json_encode($payload[0]['answer']);
-//                fwrite($myfile, $myJSON);
-//                fclose($myfile);
         $careerTrait = $payload[0]['answer']+$payload[9]['answer']+$payload[14]['answer']
             +$payload[20]['answer']+$payload[27]['answer'];
         $careerTraitPercentage = round(($careerTrait / 35)*100);
@@ -73,5 +71,22 @@ class InventoryService extends BaseService
             +$payload[19]['answer']+$payload[23]['answer'];
         $protectTraitPercentage = round(($protectTrait / 35)*100);
         $this->traitsService->assignTraitToUser ($inventory->traits[5],$protectTraitPercentage,Auth::id());
+    }
+    public function getTraitsStats (Inventory $inventory)
+    {
+        $traits = $inventory->traits;
+        $traitsWithValues  = [];
+
+        foreach ($traits as $trait)
+        {
+            $traitRows = TraitsUser::where ('trait_id',$trait->id)->get();
+            $values =[];
+            foreach ($traitRows as $row){
+                array_push($values,$row->value);
+            }
+            array_push($traitsWithValues,["name"=>$trait->name,"values"=>$values]);
+        }
+        return ["traits"=>$traitsWithValues];
+
     }
 }

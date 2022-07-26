@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Dashboard\InventoryController;
 use App\Http\Controllers\Mobile\EventUserRatingController;
 use App\Http\Controllers\Mobile\LeaderboardController;
 use App\Http\Controllers\Mobile\QuestionnaireController;
+use App\Http\Controllers\Mobile\VolunteeringCenterController;
 use App\Models\EventUserRating;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Mobile\AuthController;
@@ -85,6 +87,11 @@ Route::group(['middleware' => ['auth:sanctum', 'type.user']], function (){
     // temp
     Route::get('event/tempChangeStatus/{event}', [EventController::class, 'tempChangeEventStatus']);
 
+
+    Route::get('volunteeringCenter/events', [VolunteeringCenterController::class, 'getEventUserStats']);
+    Route::get('volunteeringCenter/gamification', [VolunteeringCenterController::class, 'getUserGamificationStats']);
+
+    Route::get('getTraitsStats/{inventory}', [InventoryController::class, 'getTraitsStats']);
 
     //
 

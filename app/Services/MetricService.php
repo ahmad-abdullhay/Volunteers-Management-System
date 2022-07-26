@@ -265,16 +265,13 @@ protected BadgeService $badgeService;
 
     public function getAllEventMetric($metricId, $userId)
     {
-
         $metric = Metric::where('id', $metricId)->first();
         if ($metric->class != null){
-
                 return $this->preDefinedMetricRepository->getAllPreDefinedMetric($metric->id,$userId);
         }
         $metricType = $metric->type;
         $className = config('metric.' . $metricType);
         $eventsId = Event::where ('status',3)->pluck('id')->toArray();;
-
         $metrics = MetricEventValue::select('event_id', 'metric_value_type_id', 'valuable_type')
             ->whereIn("event_id",$eventsId)
             ->where('valuable_type', $className)
@@ -293,6 +290,37 @@ protected BadgeService $badgeService;
             }
             if (!empty($array))
                 array_push($metricsArray, $array);
+        }
+        return $metricsArray;
+    }
+
+    public function getAllEventMetricWithDates($metricId, $userId)
+    {
+        $metric = Metric::where('id', $metricId)->first();
+        if ($metric->class != null){
+            return $this->preDefinedMetricRepository->getAllPreDefinedMetric($metric->id,$userId);
+        }
+        $metricType = $metric->type;
+        $className = config('metric.' . $metricType);
+        $eventsId = Event::where ('status',3)->pluck('id')->toArray();;
+        $metrics = MetricEventValue::select('event_id', 'metric_value_type_id', 'valuable_type')
+            ->whereIn("event_id",$eventsId)
+            ->where('valuable_type', $className)
+            ->where('user_id', $userId)
+            ->where('metric_id', $metricId)
+            ->get()
+            ->groupBy(['event_id']);
+
+        $metricsArray = [];
+        foreach ($metrics as $key => $values) {
+            $array = [];
+            foreach ($values as $value) {
+                array_push($array, ["value"=>$value->value->value,"date" => $value->value->created_at]);
+            }
+            if (!empty($array)){
+                array_push($metricsArray, $array);
+            }
+
         }
         return $metricsArray;
     }

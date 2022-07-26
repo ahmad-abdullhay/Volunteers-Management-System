@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\CrudController;
 use App\Http\Requests\MainRequest;
+use App\Models\Inventory;
 use App\Services\InventoryService;
 use Illuminate\Http\Request;
 
@@ -24,5 +25,9 @@ class InventoryController extends CrudController
     public function getAll ()
     {
         return $this->handleSharedMessage($this->service->getAll());
+    }
+    public function getTraitsStats (Inventory $inventory)
+    {
+        return $this->service->getTraitsStats($inventory);
     }
 }

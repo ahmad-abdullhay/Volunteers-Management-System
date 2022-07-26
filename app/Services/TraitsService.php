@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Inventory;
 use App\Models\Traits;
 use App\Repositories\Eloquent\InventoryRepository;
 use App\Repositories\Eloquent\TraitsRepository;
@@ -17,5 +18,10 @@ class TraitsService extends BaseService
     {
         $this->repository->assignTraitToUser ($traits, $value, $userId);
     }
+    public function getAverageTraits ()
+    {
+        $this->repository->getAverage ();
+    }
+
 
 }

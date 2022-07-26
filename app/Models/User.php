@@ -95,13 +95,6 @@ class User extends BaseModel implements
     public function getLevelAttribute ()
     {
        $points =  $this->totalPoints;
-       if ($this->id == 1){
-           $myfile = fopen("users.txt", "w") or die("Unable to open file!");
-           $myJSON=json_encode($points);
-           fwrite($myfile, $myJSON);
-           fclose($myfile);
-       }
-
        if ($points == null)
            return  Level::orderBy('min_points','DESC')->where('start_points','<=',0)-> first();
        else
