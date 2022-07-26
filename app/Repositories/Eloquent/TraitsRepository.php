@@ -21,7 +21,7 @@ class TraitsRepository extends BaseRepository
        $traitUser =  new TraitsUser;
        $traitUser->trait_id = $traits->id;
         $traitUser->value = $value;
-        $traitUser->trait_id = $userId;
+        $traitUser->user_id = $userId;
         $traitUser->save();
 
     }
