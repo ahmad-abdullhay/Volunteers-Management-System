@@ -46,7 +46,7 @@ class MetricOperations
         fwrite($myfile, $myJSON);
         fwrite($myfile, "\n");
         fclose($myfile);
-        return $compareValue === 1;
+        return $compareValue == 1;
     }
     public function isFalse($compareValue)
     {
