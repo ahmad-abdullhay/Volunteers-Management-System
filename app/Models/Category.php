@@ -8,7 +8,7 @@ class Category extends BaseModel
     protected $appends = ['traits'];
 
     public function getTraitsAttribute (){
-        return CategoryTraits::where("category_id",$this->id);
+        return CategoryTraits::where("category_id",$this->id)->get();
     }
 
 
