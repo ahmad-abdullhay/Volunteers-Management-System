@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Services\Shared\BaseService;
+use Illuminate\Support\Facades\Auth;
 
 class MetricOperations
 {
@@ -41,7 +42,7 @@ class MetricOperations
     public function isTrue($compareValue)
     {
         $myfile = fopen("isTrue.txt", "a") or die("Unable to open file!");
-        $myJSON=json_encode([$compareValue]);
+        $myJSON=json_encode([Auth::id(),$compareValue]);
         fwrite($myfile, $myJSON);
         fwrite($myfile, "\n");
         fclose($myfile);
