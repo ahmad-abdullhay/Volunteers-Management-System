@@ -83,6 +83,8 @@ class LeaderboardService extends BaseService
     }
     public function newTable ($payload)
     {
+        if ($payload['metric_queries']['second_operation']=="null" )
+            $payload['metric_queries']['second_operation']="sum";
       $query =  $this->metricQueryService->newLeaderboardMetricQuery($payload['metric_queries']);
         return  $this->repository->newTable($payload,$query);
     }

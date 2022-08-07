@@ -217,7 +217,7 @@ class EventService extends BaseService
     public function tempChangeEventStatus(Event $event,$payload,PointRuleService $service, BadgeConditionService $badgeConditionService,
                                       BadgeService $badgeService, MetricService $metricService)
     {
-        $payload['status'] = 3;
+        $payload['status'] =  $event->status+1;
         if ($payload['status'] == 3){
             $this->eventEnd( $event,$service,  $badgeConditionService,
                 $badgeService,  $metricService);
